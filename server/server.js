@@ -16,7 +16,5 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
 mongoose.connect('mongodb://block_user:blockquizpass@ds255319.mlab.com:55319/aurimas_sk');
 app.use('/', router);
-app.listen(8080, function () {
-    console.log('Express server is up and running!');
-});
+app.listen(process.env.PORT || 5000);
 module.exports = app;
