@@ -9,12 +9,13 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-if (module.hot) {
-    module.hot.accept('./App', () => {
-        const NextApp = require('./App').default
-        ReactDOM.render(
-            <NextApp />,
-            rootEl
-        )
-    })
-}
+// const render = Component => {
+//     return ReactDOM.render(
+//         <HashRouter>
+//             <Routes />
+//         </HashRouter>,
+//         document.getElementById('root')
+//     );
+// };
+
+// render(App);

@@ -16,5 +16,10 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
 mongoose.connect('mongodb://block_user:blockquizpass@ds255319.mlab.com:55319/aurimas_sk');
 app.use('/', router);
-app.listen(process.env.PORT || 5000);
+
+var port = 8001
+app.listen(port, function () {
+    console.log('running at localhost: ' + port);
+});
+
 module.exports = app;
