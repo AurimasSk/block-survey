@@ -2,26 +2,32 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
-var Expense = require('../../models/Expense');
+var Answers = require('../../models/Answers');
 router.get('/', function (req, res) {
+    console.log("I'm in root route");
     res.render('index')
 });
 router.route('/insert')
     .post(function (req, res) {
-        var expense = new Expense();
-        expense.firstName = req.body.firstName;
-        expense.lastName = req.body.lastName;
-        expense.workplace = req.body.workplace;
-        expense.email = req.body.email;
-        expense.telephone = req.body.telephone;
-        expense.transport = req.body.transport;
-        expense.sleeping = req.body.sleeping;
-        expense.feeding = req.body.feeding;
-        expense.rulesAccepted = req.body.rulesAccepted;
-        expense.save(function (err) {
-            if (err)
+        var answers = new Answers();
+        answers.firstName = req.body.firstName;
+        answers.lastName = req.body.lastName;
+        answers.workplace = req.body.workplace;
+        answers.email = req.body.email;
+        answers.telephone = req.body.telephone;
+        answers.transport = req.body.transport;
+        answers.colleagueName = req.body.colleagueName;
+        answers.sleeping = req.body.sleeping;
+        answers.arriveTime = req.body.arriveTime;
+        answers.customArriveTime = req.body.customArriveTime;
+        answers.feeding = req.body.feeding;
+        answers.rulesAccepted = req.body.rulesAccepted;
+        answers.safetyAccepted = req.body.safetyAccepted;
+
+        answers.save(function (err) {
+            // if (err)
                 res.send(err);
-            res.send('Expense successfully added!');
+            // res.send('Answers successfully added!');
         });
     })
 module.exports = router;

@@ -28,6 +28,7 @@ class Add extends React.Component {
             "Pasibaigus oficialios registracijos laikui"
         ];
         this.state = {
+            showSuccessScreen: false,
             inputData: {
                 firstName: { value: '', isValid: true, message: '' },
                 lastName: { value: '', isValid: true, message: '' },
@@ -58,19 +59,20 @@ class Add extends React.Component {
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
         this.handleRadioChange = this.handleRadioChange.bind(this);
         this.handleTimeChange = this.handleTimeChange.bind(this);
-        this.insertNewExpense = this.insertNewExpense.bind(this);
+        this.insertNewAnswers = this.insertNewAnswers.bind(this);
         this.validateInputs = this.validateInputs.bind(this);
         this.resetValidationStates = this.resetValidationStates.bind(this);
+        this.concatFeedingValues = this.concatFeedingValues.bind(this);
         this.handleCheckboxGroupChanged = this.handleCheckboxGroupChanged.bind(this);
-    }
-    componentDidMount() {
     }
 
     onSave(e) {
-        // this.insertNewExpense(this);
         e.preventDefault();
         this.resetValidationStates();
-        this.validateInputs();
+        var inputValid = this.validateInputs();
+        if (inputValid) {
+            this.insertNewAnswers(this);
+        }
     }
 
     validateInputs() {
@@ -116,7 +118,7 @@ class Add extends React.Component {
         if (state.inputData.transport.value == this.allTransportOptions[2] &&
             state.inputData.colleagueName.value.length == 0) {
             state.inputData.colleagueName.isValid = false;
-            state.inputData.colleagueName.message = 'Prašome įvesti kolegos vardą';
+            state.inputData.colleagueName.message = 'Prašome įvesti kolegos vardą ir pavardę';
             this.setState(state);
             inputValid = false;
         }
@@ -129,7 +131,7 @@ class Add extends React.Component {
         if (state.inputData.arriveTime.value == this.arriveOptions[2] &&
             state.inputData.customArriveTime.value.length == 0) {
             state.inputData.customArriveTime.isValid = false;
-            state.inputData.customArriveTime.message = 'Prašome įvesti apytikrį atvykimo laiką';
+            state.inputData.customArriveTime.message = 'Prašome įvesti apytikslį atvykimo laiką';
             this.setState(state);
             inputValid = false;
         }
@@ -178,31 +180,50 @@ class Add extends React.Component {
         this.setState(state);
     }
 
-    insertNewExpense(e) {
-        console.log("Button clicked");
+    insertNewAnswers(e) {
         console.log("Values: ", this.state);
         axios.post('/insert',
             querystring.stringify({
-                firstName: e.state.inputData.firstName,
-                lastName: e.state.inputData.lastName,
-                workplace: e.state.inputData.workplace,
-                email: e.state.inputData.email,
-                telephone: e.state.inputData.telephone,
-                transport: e.state.inputData.transport,
-                sleeping: e.state.inputData.sleeping,
-                feeding: e.state.inputData.feeding,
-                rulesAccepted: e.state.inputData.rulesAccepted
+                firstName: e.state.inputData.firstName.value,
+                lastName: e.state.inputData.lastName.value,
+                workplace: e.state.inputData.workplace.value,
+                email: e.state.inputData.email.value,
+                telephone: e.state.inputData.telephone.value,
+                transport: e.state.inputData.transport.value,
+                colleagueName: e.state.inputData.colleagueName.value,
+                sleeping: e.state.inputData.sleeping.value,
+                arriveTime: e.state.inputData.arriveTime.value,
+                customArriveTime: e.state.inputData.customArriveTime.value,
+                feeding: this.concatFeedingValues(e.state.inputData.feeding.value),
+                rulesAccepted: e.state.inputData.rulesAccepted.value,
+                safetyAccepted: e.state.inputData.safetyAccepted.value
             }), {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
                 }
             }).then(function (response) {
-                // e.setState({
-                //     messageFromServer: response.data
-                // });
-                console.log("Response: ", response);
+                if (response && response.status != 200) {
+                    alert("Įvyko klaida. Prašome pakartoti.");
+                }
+                else {
+                    e.setState({ showSuccessScreen: true });
+                }
             });
     }
+
+    concatFeedingValues(feedingValues) {
+        var concatenatedValue = "";
+        feedingValues.map(value => {
+            console.log("I'm in feeding value with name ", value);
+            if (value.checked) {
+                console.log("Adding part to feeding");
+                concatenatedValue = concatenatedValue + value.title + "; "
+            }
+        });
+        console.log("Concatenated feeding value: ", concatenatedValue);
+        return concatenatedValue;
+    }
+
     handleTextChange(event) {
         console.log("Event", event.target.name, event.target.value);
         const fieldName = event.target.name;
@@ -262,161 +283,157 @@ class Add extends React.Component {
         var workplaceGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.workplace.isValid });
         var emailGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.email.isValid });
         var telephoneGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.telephone.isValid });
-        var transportGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.transport.isValid });
+        var transportGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.transport.isValid });
         var colleagueNameGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.colleagueName.isValid });
-        var arriveTimeGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.arriveTime.isValid });
+        var arriveTimeGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.arriveTime.isValid });
         var customArriveTimeGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.customArriveTime.isValid });
-        var sleepingGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.sleeping.isValid });
-        var feedingGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.feeding.isValid });
-        var rulesAcceptedGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.rulesAccepted.isValid });
-        var safetyAcceptedGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.safetyAccepted.isValid });
+        var sleepingGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.sleeping.isValid });
+        var feedingGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.feeding.isValid });
+        var rulesAcceptedGroupClass = classNames('form-group', 'minWidthAgreeRules', { 'has-error': !this.state.inputData.rulesAccepted.isValid });
+        var safetyAcceptedGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.safetyAccepted.isValid });
 
         return (
             <div>
                 <section id="contact">
-                    <div className="container">
-                        <div className="col-lg-1"/>    
-                        <div className="col-lg-10">
-                            <h4 className="section-header">Saint-Gobain džiaugiasi statydami ne tik namus, bet ir kasdien tvirtėjantį ryšį su savo klientais bei partneriais. Į šią kasdien tobulinamą konstrukciją sudėję geriausius save, kviečiame jus – mūsų rimtus, pašėlusius, kūrybingus ar svajojančius draugus – užpildyti Saint-Gobain MORE Joninių festivalio dalyvio anketą.</h4>
-                        </div>
-                        <div className="col-lg-1"/>
-                    </div>
-                    <div className="contact-section">
-                        <form onSubmit={this.onSave}>
-                            <div className="container">
-                                <div className="col-lg-6 form-line">
-                                    <div className={firstNameGroupClass}>
-                                        <label htmlFor="firstName">Vardas</label>
-                                        <input type="text" className="form-control" id="firstName" name="firstName" value={this.state.firstName} onChange={this.handleTextChange} placeholder="Įveskite savo vardą" />
-                                        <span className="help-block">{this.state.inputData.firstName.message}</span>
-                                    </div>
-                                    <div className={lastNameGroupClass}>
-                                        <label htmlFor="lastName">Pavardė</label>
-                                        <input type="text" className="form-control" id="lastName" name="lastName" value={this.state.lastName} onChange={this.handleTextChange} placeholder="Įveskite savo pavardę" />
-                                        <span className="help-block">{this.state.inputData.lastName.message}</span>
-                                    </div>
-                                    <div className={workplaceGroupClass}>
-                                        <label htmlFor="workplace">Įmonė</label>
-                                        <input type="text" className="form-control" id="workplace" name="workplace" value={this.state.workplace} onChange={this.handleTextChange} placeholder="Įveskite savo įmonės pavadinimą" />
-                                        <span className="help-block">{this.state.inputData.workplace.message}</span>
-                                    </div>
-                                    <div className={emailGroupClass}>
-                                        <label htmlFor="email">El. paštas</label>
-                                        <input type="text" className="form-control" id="email" name="email" value={this.state.email} onChange={this.handleTextChange} placeholder="Įveskite savo el. paštą" />
-                                        <span className="help-block">{this.state.inputData.email.message}</span>
-                                    </div>
-                                    <div className={telephoneGroupClass}>
-                                        <label htmlFor="telephone">Tel. Nr.</label>
-                                        <input type="text" className="form-control" id="telephone" name="telephone" value={this.state.telephone} onChange={this.handleTextChange} placeholder="Įveskite savo telefono numerį" />
-                                        <span className="help-block">{this.state.inputData.telephone.message}</span>
-                                    </div>
-                                </div>
-                                <div className="col-lg-6">
-                                    <div className={transportGroupClass}>
-                                        <label htmlFor="transport">Transportas</label>
-                                        <ReactRadioButtonGroup
-                                            options={this.allTransportOptions}
-                                            name="transport"
-                                            isStateful={true}
-                                            onChange={checkedValue => this.handleRadioChange(checkedValue)}
-                                            inputClassName="ledas"
-                                        />
-                                        {this.state.inputData.transport.value == 'Planuoju prisijungti prie kolegos, vyksiančio savo transportu' &&
-                                            <div className={colleagueNameGroupClass}>
-                                                <input type="text" className="form-control" id="colleagueName" name="colleagueName" value={this.state.colleagueName} onChange={this.handleTextChange} placeholder="Nurodykite kolegos vardą ir pavardę " />
-                                                <span className="help-block">{this.state.inputData.colleagueName.message}</span>
+                    {this.state.showSuccessScreen && <div className="centered"><h1>Ačiū, jūsų duomenys sėkmingai išsaugoti!</h1></div>}
+                    {!this.state.showSuccessScreen &&
+                        <div>
+                            <div className="section-content">
+                                <h4 className="section-header"> Saint-Gobain džiaugiasi statydami ne tik namus, bet ir kasdien tvirtėjantį ryšį su savo klientais bei partneriais. Į šią kasdien tobulinamą konstrukciją sudėję geriausius save, kviečiame jus – mūsų rimtus, pašėlusius, kūrybingus ar svajojančius draugus – užpildyti <b>Saint-Gobain MORE</b> Joninių festivalio dalyvio anketą</h4>
+                            </div>
+                            <div className="container contact-section">
+                                <form onSubmit={this.onSave}>
+                                    <div className="row">
+                                        <div className="col-lg-6">
+                                            <div className={firstNameGroupClass}>
+                                                <label htmlFor="firstName">Vardas</label>
+                                                <input type="text" className="form-control" id="firstName" name="firstName" value={this.state.firstName} onChange={this.handleTextChange} placeholder="Įveskite savo vardą" />
+                                                <span className="help-block">{this.state.inputData.firstName.message}</span>
                                             </div>
-                                        }
-                                        <span className="help-block">{this.state.inputData.transport.message}</span>
-                                    </div>
-                                    <div className={arriveTimeGroupClass}>
-                                        <label htmlFor="arriveTime">Planuoju atvykti</label>
-                                        <ReactRadioButtonGroup
-                                            options={this.arriveOptions}
-                                            name="arriveTime"
-                                            isStateful={true}
-                                            onChange={checkedValue => this.handleRadioChange(checkedValue)}
-                                            inputClassName="ledas"
-
-                                        >
-                                        </ReactRadioButtonGroup>
-                                        {this.state.inputData.arriveTime.value == "Pasibaigus oficialios registracijos laikui" &&
-                                            <div className={customArriveTimeGroupClass}>
-                                                <input type="text" className="form-control" id="customArriveTime" name="customArriveTime" value={this.state.customArriveTime} onChange={this.handleTextChange} placeholder="Nurodykite apytikslį laiką" />
-                                                {/* <label htmlFor="customArriveTime">Nurodykite apytikslį laiką</label> */}
-                                                {/* <TimePicker id="customArriveTime" onChange={this.handleTimeChange} value={this.state.customArriveTime} /> */}
-                                                <span className="help-block">{this.state.inputData.customArriveTime.message}</span>
+                                            <div className={lastNameGroupClass}>
+                                                <label htmlFor="lastName">Pavardė</label>
+                                                <input type="text" className="form-control" id="lastName" name="lastName" value={this.state.lastName} onChange={this.handleTextChange} placeholder="Įveskite savo pavardę" />
+                                                <span className="help-block">{this.state.inputData.lastName.message}</span>
                                             </div>
-                                        }
-                                        <span className="help-block">{this.state.inputData.arriveTime.message}</span>
-                                    </div>
-                                    <div className={sleepingGroupClass}>
-                                        <label htmlFor="sleeping">Nakvynė</label>
-                                        <ReactRadioButtonGroup
-                                            options={this.allSleepingOptions}
-                                            name="sleeping"
-                                            isStateful={true}
-                                            onChange={checkedValue => this.handleRadioChange(checkedValue)}
-                                            inputClassName="ledas"
-                                        >
-                                        </ReactRadioButtonGroup>
-                                        <span className="help-block">{this.state.inputData.sleeping.message}</span>
-                                    </div>
-                                    <div className={feedingGroupClass}>
-                                        <label>Maitinimo poreikiai</label>
-                                        <div>
-                                            {this.state.inputData.feeding.value.map(feedingOption =>
-                                                <div key={feedingOption.index}>
-                                                    <input className="form-check-input" type="checkbox"
-                                                        name={feedingOption.index}
-                                                        id={feedingOption.index}
-                                                        checked={feedingOption.checked}
-                                                        onChange={this.handleCheckboxGroupChanged}
-                                                    />
-                                                    <label htmlFor={feedingOption.index}>{feedingOption.title}</label>
-                                                </div>
-                                            )}
+                                            <div className={workplaceGroupClass}>
+                                                <label htmlFor="workplace">Įmonė</label>
+                                                <input type="text" className="form-control" id="workplace" name="workplace" value={this.state.workplace} onChange={this.handleTextChange} placeholder="Įveskite savo įmonės pavadinimą" />
+                                                <span className="help-block">{this.state.inputData.workplace.message}</span>
+                                            </div>
+                                            <div className={emailGroupClass}>
+                                                <label htmlFor="email">El. paštas</label>
+                                                <input type="text" className="form-control" id="email" name="email" value={this.state.email} onChange={this.handleTextChange} placeholder="Įveskite savo el. paštą" />
+                                                <span className="help-block">{this.state.inputData.email.message}</span>
+                                            </div>
+                                            <div className={telephoneGroupClass}>
+                                                <label htmlFor="telephone">Tel. Nr.</label>
+                                                <input type="text" className="form-control" id="telephone" name="telephone" value={this.state.telephone} onChange={this.handleTextChange} placeholder="Įveskite savo telefono numerį" />
+                                                <span className="help-block">{this.state.inputData.telephone.message}</span>
+                                            </div>
                                         </div>
-                                        <span className="help-block">{this.state.inputData.feeding.message}</span>
+                                        <div className="col-lg-6">
+                                            <div className={transportGroupClass}>
+                                                <label htmlFor="transport">Transportas</label>
+                                                <ReactRadioButtonGroup
+                                                    options={this.allTransportOptions}
+                                                    name="transport"
+                                                    isStateful={true}
+                                                    onChange={checkedValue => this.handleRadioChange(checkedValue)}
+                                                    inputClassName="ledas"
+                                                />
+                                                {this.state.inputData.transport.value == 'Planuoju prisijungti prie kolegos, vyksiančio savo transportu' &&
+                                                    <div className={colleagueNameGroupClass}>
+                                                        <input type="text" className="form-control" id="colleagueName" name="colleagueName" value={this.state.colleagueName} onChange={this.handleTextChange} placeholder="Nurodykite kolegos vardą ir pavardę " />
+                                                        <span className="help-block">{this.state.inputData.colleagueName.message}</span>
+                                                    </div>
+                                                }
+                                                <span className="help-block">{this.state.inputData.transport.message}</span>
+                                            </div>
+                                            <div className={arriveTimeGroupClass}>
+                                                <label htmlFor="arriveTime">Planuoju atvykti</label>
+                                                <ReactRadioButtonGroup
+                                                    options={this.arriveOptions}
+                                                    name="arriveTime"
+                                                    isStateful={true}
+                                                    onChange={checkedValue => this.handleRadioChange(checkedValue)}
+                                                    inputClassName="ledas"
+
+                                                >
+                                                </ReactRadioButtonGroup>
+                                                {this.state.inputData.arriveTime.value == "Pasibaigus oficialios registracijos laikui" &&
+                                                    <div className={customArriveTimeGroupClass}>
+                                                        <input type="text" className="form-control" id="customArriveTime" name="customArriveTime" value={this.state.customArriveTime} onChange={this.handleTextChange} placeholder="Nurodykite apytikslį laiką" />
+                                                        {/* <label htmlFor="customArriveTime">Nurodykite apytikslį laiką</label> */}
+                                                        {/* <TimePicker id="customArriveTime" onChange={this.handleTimeChange} value={this.state.customArriveTime} /> */}
+                                                        <span className="help-block">{this.state.inputData.customArriveTime.message}</span>
+                                                    </div>
+                                                }
+                                                <span className="help-block">{this.state.inputData.arriveTime.message}</span>
+                                            </div>
+                                            <div className={sleepingGroupClass}>
+                                                <label htmlFor="sleeping">Nakvynė</label>
+                                                <ReactRadioButtonGroup
+                                                    options={this.allSleepingOptions}
+                                                    name="sleeping"
+                                                    isStateful={true}
+                                                    onChange={checkedValue => this.handleRadioChange(checkedValue)}
+                                                    inputClassName="ledas"
+                                                >
+                                                </ReactRadioButtonGroup>
+                                                <span className="help-block">{this.state.inputData.sleeping.message}</span>
+                                            </div>
+                                            <div className={feedingGroupClass}>
+                                                <label>Maitinimo poreikiai</label>
+                                                <div>
+                                                    {this.state.inputData.feeding.value.map(feedingOption =>
+                                                        <div key={feedingOption.index}>
+                                                            <input className="form-check-input" type="checkbox"
+                                                                name={feedingOption.index}
+                                                                id={feedingOption.index}
+                                                                checked={feedingOption.checked}
+                                                                onChange={this.handleCheckboxGroupChanged}
+                                                            />
+                                                            <label className="label-margin" htmlFor={feedingOption.index}>{feedingOption.title}</label>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <span className="help-block">{this.state.inputData.feeding.message}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                    <div className="row">
+                                        <div className="form-group col-lg-12 col-centered">
+                                            <div className={rulesAcceptedGroupClass}>
+                                                <input className="form-check-input" type="checkbox"
+                                                    name="rulesAccepted"
+                                                    id="rulesAccepted"
+                                                    checked={this.state.rulesAccepted}
+                                                    onChange={this.handleCheckboxChange}
+                                                />
+                                                <label className="label-margin" htmlFor="rulesAccepted">Sutinku, kad su manimi būtų susisiekta Saint-Gobain vasaros renginio informacijos platinimo tikslais</label>
+                                                <span className="help-block">{this.state.inputData.rulesAccepted.message}</span>
+                                            </div>
+                                            <div className={safetyAcceptedGroupClass}>
+                                                <input className="form-check-input" type="checkbox"
+                                                    name="safetyAccepted"
+                                                    id="safetyAccepted"
+                                                    checked={this.state.safetyAccepted}
+                                                    onChange={this.handleCheckboxChange}
+                                                />
+                                                <label className="label-margin" htmlFor="safetyAccepted">Už savo saugumą renginyje esu atsakingas pats</label>
+                                                <span className="help-block">{this.state.inputData.safetyAccepted.message}</span>
+                                            </div>
+                                            <button className="btn btn-lg btn-primary btn-block" type="submit">Išsaugoti</button>
+                                            <br />
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <div className="container">
-                                <div className={rulesAcceptedGroupClass}>
-                                    <input className="form-check-input" type="checkbox"
-                                        name="rulesAccepted"
-                                        id="rulesAccepted"
-                                        checked={this.state.rulesAccepted}
-                                        onChange={this.handleCheckboxChange}
-                                    />
-                                    <label htmlFor="rulesAccepted">Sutinku, kad su manimi būtų susisiekta Saint-Gobain vasaros renginio informacijos platinimo tikslais</label>
-                                    <span className="help-block">{this.state.inputData.rulesAccepted.message}</span>
-                                </div>
-                                <div className={safetyAcceptedGroupClass}>
-                                    <input className="form-check-input" type="checkbox"
-                                        name="rulesAccepted"
-                                        id="rulesAccepted"
-                                        checked={this.state.safetyAccepted}
-                                        onChange={this.handleCheckboxChange}
-                                    />
-                                    <label htmlFor="rulesAccepted">Už savo saugumą renginyje esu atsakingas pats</label>
-                                    <span className="help-block">{this.state.inputData.safetyAccepted.message}</span>
-                                </div>
-                                <br /><br /><br /><br />
-                                {/* <div>
-                                    <input
-                                        type="submit"
-                                        className="btn btn-default submit"
-                                        value="Išsiųsti"
-                                        onClick={this.onSave} />
-                                </div> */}
-                                <button className="btn btn-lg btn-primary btn-block" type="submit">Išsaugoti</button>
-                                <br /><br /><br /><br />
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                    }
                 </section>
             </div >
+
         )
     }
 }

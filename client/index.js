@@ -1,11 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import Routes from './routes'
+import 'babel-polyfill';
+
 ReactDOM.render(
-    <HashRouter>
+    <BrowserRouter>
         <Routes />
-    </HashRouter>,
+    </BrowserRouter>,
     document.getElementById('root')
 );
 

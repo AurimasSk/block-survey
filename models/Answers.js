@@ -8,8 +8,13 @@ var expenseSchema = new Schema({
     email: String,
     telephone: String,
     transport: String,
+    colleagueName: String,
     sleeping: String,
+    arriveTime: String,
+    customArriveTime: String,
     feeding: String,
-    rulesAccepted: Boolean
+    rulesAccepted: Boolean,
+    safetyAccepted: Boolean
 });
+
 module.exports = mongoose.model('Expense', expenseSchema);

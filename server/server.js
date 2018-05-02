@@ -17,8 +17,8 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
 mongoose.connect('mongodb://block_user:blockquizpass@ds255319.mlab.com:55319/aurimas_sk');
 app.use('/', router);
 
-var port = 8001
-app.listen(port, function () {
+var port = 8000
+app.listen(port || 5000, function () {
     console.log('running at localhost: ' + port);
 });
 
