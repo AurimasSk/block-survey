@@ -28,7 +28,7 @@
   },
   "scripts": {
     "webpack": "webpack",
-    "start": "node server server.js"
+    "start": "node server/server.js"
   },
   "devDependencies": {
     "babel-preset-es2015-node": "^6.1.1"
