@@ -181,7 +181,6 @@ class Add extends React.Component {
     }
 
     insertNewAnswers(e) {
-        console.log("Values: ", this.state);
         axios.post('/insert',
             querystring.stringify({
                 firstName: e.state.inputData.firstName.value,
@@ -214,61 +213,53 @@ class Add extends React.Component {
     concatFeedingValues(feedingValues) {
         var concatenatedValue = "";
         feedingValues.map(value => {
-            console.log("I'm in feeding value with name ", value);
             if (value.checked) {
-                console.log("Adding part to feeding");
                 concatenatedValue = concatenatedValue + value.title + "; "
             }
         });
-        console.log("Concatenated feeding value: ", concatenatedValue);
+
         return concatenatedValue;
     }
 
     handleTextChange(event) {
-        console.log("Event", event.target.name, event.target.value);
         const fieldName = event.target.name;
         let inputData = this.state.inputData;
         inputData[fieldName].value = event.target.value;
-        console.log("Changed value: ", inputData[fieldName]);
         return this.setState({ inputData: inputData });
     }
 
     handleCheckboxChange(event) {
-        console.log("Event", event.target.name, event.target.checked);
         const fieldName = event.target.name;
         let inputData = this.state.inputData;
         inputData[fieldName].value = event.target.checked;
-        console.log("Changed value: ", inputData[fieldName]);
+
         return this.setState({ inputData: inputData });
     }
 
     handleTimeChange(time) {
-        console.log("Time", time);
         const fieldName = event.target.name;
         let inputData = this.state.inputData;
         inputData[fieldName].value = time;
-        console.log("Changed value: ", inputData[fieldName]);
+
         return this.setState({ inputData: inputData });
     }
 
     handleRadioChange(value) {
-        console.log("Event", event.target.name, event.target.checked);
         const fieldName = event.target.name;
         let inputData = this.state.inputData;
         inputData[fieldName].value = value;
-        console.log("Changed value: ", inputData[fieldName]);
+
         return this.setState({ inputData: inputData });
     }
 
     handleCheckboxGroupChanged(event) {
-        console.log("Event", event.target.name, event.target.checked);
         const index = event.target.name;
         let inputData = this.state.inputData;
         inputData.feeding.value.map(feedingOption => {
             if (feedingOption.index == index)
                 feedingOption.checked = event.target.checked;
         })
-        console.log("Changed value: ", inputData.feeding);
+
         return this.setState({ inputData: inputData });
     }
 

@@ -41113,7 +41113,6 @@ var Add = function (_React$Component) {
     }, {
         key: 'insertNewAnswers',
         value: function insertNewAnswers(e) {
-            console.log("Values: ", this.state);
             _axios2.default.post('/insert', querystring.stringify({
                 firstName: e.state.inputData.firstName.value,
                 lastName: e.state.inputData.lastName.value,
@@ -41145,65 +41144,57 @@ var Add = function (_React$Component) {
         value: function concatFeedingValues(feedingValues) {
             var concatenatedValue = "";
             feedingValues.map(function (value) {
-                console.log("I'm in feeding value with name ", value);
                 if (value.checked) {
-                    console.log("Adding part to feeding");
                     concatenatedValue = concatenatedValue + value.title + "; ";
                 }
             });
-            console.log("Concatenated feeding value: ", concatenatedValue);
+
             return concatenatedValue;
         }
     }, {
         key: 'handleTextChange',
         value: function handleTextChange(event) {
-            console.log("Event", event.target.name, event.target.value);
             var fieldName = event.target.name;
             var inputData = this.state.inputData;
             inputData[fieldName].value = event.target.value;
-            console.log("Changed value: ", inputData[fieldName]);
             return this.setState({ inputData: inputData });
         }
     }, {
         key: 'handleCheckboxChange',
         value: function handleCheckboxChange(event) {
-            console.log("Event", event.target.name, event.target.checked);
             var fieldName = event.target.name;
             var inputData = this.state.inputData;
             inputData[fieldName].value = event.target.checked;
-            console.log("Changed value: ", inputData[fieldName]);
+
             return this.setState({ inputData: inputData });
         }
     }, {
         key: 'handleTimeChange',
         value: function handleTimeChange(time) {
-            console.log("Time", time);
             var fieldName = event.target.name;
             var inputData = this.state.inputData;
             inputData[fieldName].value = time;
-            console.log("Changed value: ", inputData[fieldName]);
+
             return this.setState({ inputData: inputData });
         }
     }, {
         key: 'handleRadioChange',
         value: function handleRadioChange(value) {
-            console.log("Event", event.target.name, event.target.checked);
             var fieldName = event.target.name;
             var inputData = this.state.inputData;
             inputData[fieldName].value = value;
-            console.log("Changed value: ", inputData[fieldName]);
+
             return this.setState({ inputData: inputData });
         }
     }, {
         key: 'handleCheckboxGroupChanged',
         value: function handleCheckboxGroupChanged(event) {
-            console.log("Event", event.target.name, event.target.checked);
             var index = event.target.name;
             var inputData = this.state.inputData;
             inputData.feeding.value.map(function (feedingOption) {
                 if (feedingOption.index == index) feedingOption.checked = event.target.checked;
             });
-            console.log("Changed value: ", inputData.feeding);
+
             return this.setState({ inputData: inputData });
         }
     }, {

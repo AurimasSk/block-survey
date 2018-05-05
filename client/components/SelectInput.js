@@ -23,13 +23,4 @@ const SelectInput = ({ name, label, onChange, defaultOption, value, options }) =
     );
 };
 
-// SelectInput.propTypes = {
-//     name: PropTypes.string.isRequired,
-//     label: PropTypes.string.isRequired,
-//     onChange: PropTypes.func.isRequired,
-//     defaultOption: PropTypes.string,
-//     value: PropTypes.string,
-//     options: PropTypes.arrayOf(PropTypes.object)
-// };
-
 export default SelectInput;

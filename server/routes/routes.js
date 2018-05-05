@@ -4,7 +4,6 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 var Answers = require('../../models/Answers');
 router.get('/', function (req, res) {
-    console.log("I'm in root route");
     res.render('index')
 });
 router.route('/insert')
@@ -25,9 +24,9 @@ router.route('/insert')
         answers.safetyAccepted = req.body.safetyAccepted;
 
         answers.save(function (err) {
-            // if (err)
+             if (err)
                 res.send(err);
-            // res.send('Answers successfully added!');
+             res.send('Answers successfully added!');
         });
     })
 module.exports = router;

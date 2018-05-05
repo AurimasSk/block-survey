@@ -6,7 +6,7 @@ import Routes from './routes'
 import 'babel-polyfill';
 
 ReactDOM.render(
-    <BrowserRouter>
+    <BrowserRouter>   
         <Routes />
     </BrowserRouter>,
     document.getElementById('root')
