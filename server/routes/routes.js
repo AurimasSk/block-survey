@@ -19,7 +19,8 @@ router.route('/insert')
         answers.arriveTime = req.body.arriveTime;
         answers.customArriveTime = req.body.customArriveTime;
         answers.feeding = req.body.feeding;
-        answers.rulesAccepted = req.body.rulesAccepted;
+        answers.personDataAgreement = req.body.personDataAgreement;
+        answers.personMediaAgreement = req.body.personMediaAgreement;
         answers.safetyAccepted = req.body.safetyAccepted;
 
         answers.save(function (err) {

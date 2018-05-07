@@ -27,6 +27,10 @@ class Add extends React.Component {
             "10:30 – 11:30 val.",
             "Pasibaigus oficialios registracijos laikui"
         ];
+        this.agreeDisagreeOptions = [
+            "Sutinku",
+            "Nesutinku"
+        ];
         this.state = {
             showSuccessScreen: false,
             inputData: {
@@ -49,7 +53,8 @@ class Add extends React.Component {
                         ],
                     isValid: true, message: ''
                 },
-                rulesAccepted: { value: false, isValid: true, message: '' },
+                personDataAgreement: { value: '', isValid: true, message: '' },
+                personMediaAgreement: { value: '', isValid: true, message: '' },
                 safetyAccepted: { value: false, isValid: true, message: '' },
             }
         }
@@ -144,9 +149,15 @@ class Add extends React.Component {
             this.setState(state);
             inputValid = false;
         }
-        if (!state.inputData.rulesAccepted.value) {
-            state.inputData.rulesAccepted.isValid = false;
-            state.inputData.rulesAccepted.message = 'Prašome pažymėti';
+        if (state.inputData.personDataAgreement.value.length == 0) {
+            state.inputData.personDataAgreement.isValid = false;
+            state.inputData.personDataAgreement.message = 'Prašome pasirinkti ar sutinkate';
+            this.setState(state);
+            inputValid = false;
+        }
+        if (state.inputData.personMediaAgreement.value.length == 0) {
+            state.inputData.personMediaAgreement.isValid = false;
+            state.inputData.personMediaAgreement.message = 'Prašome pasirinkti ar sutinkate';
             this.setState(state);
             inputValid = false;
         }
@@ -185,7 +196,8 @@ class Add extends React.Component {
                 arriveTime: e.state.inputData.arriveTime.value,
                 customArriveTime: e.state.inputData.customArriveTime.value,
                 feeding: this.concatFeedingValues(e.state.inputData.feeding.value),
-                rulesAccepted: e.state.inputData.rulesAccepted.value,
+                personDataAgreement: e.state.inputData.personDataAgreement.value,
+                personMediaAgreement: e.state.inputData.personMediaAgreement.value,
                 safetyAccepted: e.state.inputData.safetyAccepted.value
             }), {
                 headers: {
@@ -239,7 +251,6 @@ class Add extends React.Component {
         const fieldName = event.target.name;
         let inputData = this.state.inputData;
         inputData[fieldName].value = value;
-
         return this.setState({ inputData: inputData });
     }
 
@@ -270,7 +281,8 @@ class Add extends React.Component {
         var customArriveTimeGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.customArriveTime.isValid });
         var sleepingGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.sleeping.isValid });
         var feedingGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.feeding.isValid });
-        var rulesAcceptedGroupClass = classNames('form-group', 'minWidthAgreeRules', { 'has-error': !this.state.inputData.rulesAccepted.isValid });
+        var personDataAgreementGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.personDataAgreement.isValid });
+        var personMediaAgreementGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.personMediaAgreement.isValid });
         var safetyAcceptedGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.safetyAccepted.isValid });
 
         return (
@@ -378,15 +390,39 @@ class Add extends React.Component {
                                     </div>
                                     <div className="row">
                                         <div className="form-group col-lg-12 col-centered">
-                                            <div className={rulesAcceptedGroupClass}>
-                                                <input className="form-check-input" type="checkbox"
-                                                    name="rulesAccepted"
-                                                    id="rulesAccepted"
-                                                    checked={this.state.rulesAccepted}
-                                                    onChange={this.handleCheckboxChange}
-                                                />
-                                                <label className="label-margin" htmlFor="rulesAccepted">Sutinku, kad su manimi būtų susisiekta Saint-Gobain vasaros renginio informacijos platinimo tikslais</label>
-                                                <span className="help-block">{this.state.inputData.rulesAccepted.message}</span>
+                                            <div className="form-group">
+                                                <label>Svarbi informacija apie Jūsų asmens duomenų tvarkymą. Sutikimas.</label>
+                                                <div className="areaClass">
+                                                    <p>Informuojame, kad UAB Saint–Gobain statybos gaminiai tvarkys Jūsų aukščiau pateiktus asmens duomenis Joninių festivalio organizavimo ir būtinos komunikacijos su Jumis tikslu. Šiuos duomenis ketiname tvarkyti Jūsų sutikimo teisiniu pagrindu, todėl Jūs turite teisę nesutikti pateikti savo duomenis, tačiau tokiu atveju, mes galime nesuteikti Jums būtinų maitinimo paslaugų arba neturėti galimybės laiku pranešti svarbią informaciją. Jūsų pateikti asmens duomenys bus saugomi 2 metus po renginio.</p>
+                                                    <p>Taip pat norime Jus informuoti, kad renginio metu bus filmuojama ir fotografuojama, siekiant užfiksuoti renginio akimirkas. Video ir foto medžiaga gali būti paskelbta mūsų administruojamose svetainėse ar kitose viešose vietose, įskaitant panaudojimą savo informaciniuose/reklaminiuose leidiniuose. Šiuos duomenis taip pat tvarkysime tik tuo atveju, jeigu Jūs sutiksite. Po renginio video ir foto medžiaga bus saugoma 5 metus, o po to bus sunaikinama, nebent teisės aktai nurodytų kitaip.</p>
+                                                    <p>Informuojame, kad Jūs, kaip duomenų subjektas turite šias teises: susipažinti su tvarkomais asmens duomenimis, reikalauti juos ištaisyti arba ištrinti, apriboti duomenų tvarkymą, teisę į duomenų perkeliamumą, taip pat Jūs turite teisę bet kada atšaukti šį savo duotą sutikimą. Tais atvejais, jeigu įtariate, kad buvo pažeistos Jūsų teisės į privatų gyvenimą, galite kreiptis į Valstybinę asmens duomenų apsaugos inspekciją. Norėdami gauti daugiau informacijos apie savo duomenų tvarkymą, rašykite mums el. paštu Jonines@SGmore.lt.</p>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className={personDataAgreementGroupClass}>
+                                                <label htmlFor="personDataAgreement">Ar sutinkate, kad <b>UAB Saint-Gobain statybos gaminiai</b> tvarkytų jūsų asmens duomenis, nurodytus anketoje, Joninių festivalio organizavimo ir būtinos komunikacijos tikslu?</label>
+                                                    <ReactRadioButtonGroup
+                                                        options={this.agreeDisagreeOptions}
+                                                        name="personDataAgreement"
+                                                        isStateful={true}
+                                                        onChange={checkedValue => this.handleRadioChange(checkedValue)}
+                                                        inputClassName="ledas"
+                                                    />
+                                                    <span className="help-block">{this.state.inputData.personDataAgreement.message}</span>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <div className={personMediaAgreementGroupClass}>
+                                                <label htmlFor="personMediaAgreement">Ar sutinkate, kad <b>UAB Saint-Gobain statybos gaminiai</b> tvarkytų jūsų video ir foto duomenis, siekdami panaudoti juos savo informaciniuose/reklaminiuose leidiniuose?</label>
+                                                    <ReactRadioButtonGroup
+                                                        options={this.agreeDisagreeOptions}
+                                                        name="personMediaAgreement"
+                                                        isStateful={true}
+                                                        onChange={checkedValue => this.handleRadioChange(checkedValue)}
+                                                        inputClassName="ledas"
+                                                    />
+                                                    <span className="help-block">{this.state.inputData.personMediaAgreement.message}</span>
+                                                </div>
                                             </div>
                                             <div className={safetyAcceptedGroupClass}>
                                                 <input className="form-check-input" type="checkbox"

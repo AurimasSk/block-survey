@@ -40959,9 +40959,10 @@ var Add = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (Add.__proto__ || Object.getPrototypeOf(Add)).call(this));
 
-        _this.allTransportOptions = ["Atvyksiu nuosavu transportu", "Domiuosi viešojo transporto variantu", "Planuoju prisijungti prie kolegos, vyksiančio savo transportu"];
+        _this.allTransportOptions = ["Atvyksiu nuosavu transportu", "Planuoju prisijungti prie kolegos, vyksiančio savo transportu", "Domiuosi viešojo transporto variantu"];
         _this.allSleepingOptions = ["Pasiliksiu renginyje iki kito ryto (su nuosava palapine)", "Vakare planuoju išvykti iš renginio"];
         _this.arriveOptions = ["09:30 – 10:30 val.", "10:30 – 11:30 val.", "Pasibaigus oficialios registracijos laikui"];
+        _this.agreeDisagreeOptions = ["Sutinku", "Nesutinku"];
         _this.state = {
             showSuccessScreen: false,
             inputData: {
@@ -40971,7 +40972,6 @@ var Add = function (_React$Component) {
                 email: { value: '', isValid: true, message: '' },
                 telephone: { value: '', isValid: true, message: '' },
                 transport: { value: '', isValid: true, message: '' },
-                colleagueName: { value: '', isValid: true, message: '' },
                 sleeping: { value: '', isValid: true, message: '' },
                 arriveTime: { value: '', isValid: true, message: '' },
                 customArriveTime: { value: '', isValid: true, message: '' },
@@ -40979,7 +40979,8 @@ var Add = function (_React$Component) {
                     value: [{ title: "Esu vegetaras", index: "1", checked: false }, { title: "Esu veganas", index: "2", checked: false }, { title: "Valgau viską, kas skaniai pagaminta", index: "3", checked: false }, { title: "Renginio metu planuoju nevartoti alkoholinių gėrimų", index: "4", checked: false }],
                     isValid: true, message: ''
                 },
-                rulesAccepted: { value: false, isValid: true, message: '' },
+                personDataAgreement: { value: '', isValid: true, message: '' },
+                personMediaAgreement: { value: '', isValid: true, message: '' },
                 safetyAccepted: { value: false, isValid: true, message: '' }
             }
         };
@@ -41048,12 +41049,6 @@ var Add = function (_React$Component) {
                 this.setState(state);
                 inputValid = false;
             }
-            if (state.inputData.transport.value == this.allTransportOptions[2] && state.inputData.colleagueName.value.length == 0) {
-                state.inputData.colleagueName.isValid = false;
-                state.inputData.colleagueName.message = 'Prašome įvesti kolegos vardą ir pavardę';
-                this.setState(state);
-                inputValid = false;
-            }
             if (state.inputData.arriveTime.value.length == 0) {
                 state.inputData.arriveTime.isValid = false;
                 state.inputData.arriveTime.message = 'Prašome pasirinkti atvykimo laiką';
@@ -41082,9 +41077,15 @@ var Add = function (_React$Component) {
                 this.setState(state);
                 inputValid = false;
             }
-            if (!state.inputData.rulesAccepted.value) {
-                state.inputData.rulesAccepted.isValid = false;
-                state.inputData.rulesAccepted.message = 'Prašome pažymėti';
+            if (state.inputData.personDataAgreement.value.length == 0) {
+                state.inputData.personDataAgreement.isValid = false;
+                state.inputData.personDataAgreement.message = 'Prašome pasirinkti ar sutinkate';
+                this.setState(state);
+                inputValid = false;
+            }
+            if (state.inputData.personMediaAgreement.value.length == 0) {
+                state.inputData.personMediaAgreement.isValid = false;
+                state.inputData.personMediaAgreement.message = 'Prašome pasirinkti ar sutinkate';
                 this.setState(state);
                 inputValid = false;
             }
@@ -41120,12 +41121,12 @@ var Add = function (_React$Component) {
                 email: e.state.inputData.email.value,
                 telephone: e.state.inputData.telephone.value,
                 transport: e.state.inputData.transport.value,
-                colleagueName: e.state.inputData.colleagueName.value,
                 sleeping: e.state.inputData.sleeping.value,
                 arriveTime: e.state.inputData.arriveTime.value,
                 customArriveTime: e.state.inputData.customArriveTime.value,
                 feeding: this.concatFeedingValues(e.state.inputData.feeding.value),
-                rulesAccepted: e.state.inputData.rulesAccepted.value,
+                personDataAgreement: e.state.inputData.personDataAgreement.value,
+                personMediaAgreement: e.state.inputData.personMediaAgreement.value,
                 safetyAccepted: e.state.inputData.safetyAccepted.value
             }), {
                 headers: {
@@ -41183,7 +41184,6 @@ var Add = function (_React$Component) {
             var fieldName = event.target.name;
             var inputData = this.state.inputData;
             inputData[fieldName].value = value;
-
             return this.setState({ inputData: inputData });
         }
     }, {
@@ -41212,12 +41212,12 @@ var Add = function (_React$Component) {
             var emailGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.email.isValid });
             var telephoneGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.telephone.isValid });
             var transportGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.transport.isValid });
-            var colleagueNameGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.colleagueName.isValid });
             var arriveTimeGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.arriveTime.isValid });
             var customArriveTimeGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.customArriveTime.isValid });
             var sleepingGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.sleeping.isValid });
             var feedingGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.feeding.isValid });
-            var rulesAcceptedGroupClass = (0, _classnames2.default)('form-group', 'minWidthAgreeRules', { 'has-error': !this.state.inputData.rulesAccepted.isValid });
+            var personDataAgreementGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.personDataAgreement.isValid });
+            var personMediaAgreementGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.personMediaAgreement.isValid });
             var safetyAcceptedGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.safetyAccepted.isValid });
 
             return _react2.default.createElement(
@@ -41361,16 +41361,6 @@ var Add = function (_React$Component) {
                                                 },
                                                 inputClassName: 'ledas'
                                             }),
-                                            this.state.inputData.transport.value == 'Planuoju prisijungti prie kolegos, vyksiančio savo transportu' && _react2.default.createElement(
-                                                'div',
-                                                { className: colleagueNameGroupClass },
-                                                _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'colleagueName', name: 'colleagueName', value: this.state.colleagueName, onChange: this.handleTextChange, placeholder: 'Nurodykite kolegos vard\u0105 ir pavard\u0119 ' }),
-                                                _react2.default.createElement(
-                                                    'span',
-                                                    { className: 'help-block' },
-                                                    this.state.inputData.colleagueName.message
-                                                )
-                                            ),
                                             _react2.default.createElement(
                                                 'span',
                                                 { className: 'help-block' },
@@ -41479,22 +41469,96 @@ var Add = function (_React$Component) {
                                         { className: 'form-group col-lg-12 col-centered' },
                                         _react2.default.createElement(
                                             'div',
-                                            { className: rulesAcceptedGroupClass },
-                                            _react2.default.createElement('input', { className: 'form-check-input', type: 'checkbox',
-                                                name: 'rulesAccepted',
-                                                id: 'rulesAccepted',
-                                                checked: this.state.rulesAccepted,
-                                                onChange: this.handleCheckboxChange
-                                            }),
+                                            { className: 'form-group' },
                                             _react2.default.createElement(
                                                 'label',
-                                                { className: 'label-margin', htmlFor: 'rulesAccepted' },
-                                                'Sutinku, kad su manimi b\u016Bt\u0173 susisiekta Saint-Gobain vasaros renginio informacijos platinimo tikslais'
+                                                null,
+                                                'Svarbi informacija apie J\u016Bs\u0173 asmens duomen\u0173 tvarkym\u0105. Sutikimas.'
                                             ),
                                             _react2.default.createElement(
-                                                'span',
-                                                { className: 'help-block' },
-                                                this.state.inputData.rulesAccepted.message
+                                                'div',
+                                                { className: 'areaClass' },
+                                                _react2.default.createElement(
+                                                    'p',
+                                                    null,
+                                                    'Informuojame, kad UAB Saint\u2013Gobain statybos gaminiai tvarkys J\u016Bs\u0173 auk\u0161\u010Diau pateiktus asmens duomenis Jonini\u0173 festivalio organizavimo ir b\u016Btinos komunikacijos su Jumis tikslu. \u0160iuos duomenis ketiname tvarkyti J\u016Bs\u0173 sutikimo teisiniu pagrindu, tod\u0117l J\u016Bs turite teis\u0119 nesutikti pateikti savo duomenis, ta\u010Diau tokiu atveju, mes galime nesuteikti Jums b\u016Btin\u0173 maitinimo paslaug\u0173 arba netur\u0117ti galimyb\u0117s laiku prane\u0161ti svarbi\u0105 informacij\u0105. J\u016Bs\u0173 pateikti asmens duomenys bus saugomi 2 metus po renginio.'
+                                                ),
+                                                _react2.default.createElement(
+                                                    'p',
+                                                    null,
+                                                    'Taip pat norime Jus informuoti, kad renginio metu bus filmuojama ir fotografuojama, siekiant u\u017Efiksuoti renginio akimirkas. Video ir foto med\u017Eiaga gali b\u016Bti paskelbta m\u016Bs\u0173 administruojamose svetain\u0117se ar kitose vie\u0161ose vietose, \u012Fskaitant panaudojim\u0105 savo informaciniuose/reklaminiuose leidiniuose. \u0160iuos duomenis taip pat tvarkysime tik tuo atveju, jeigu J\u016Bs sutiksite. Po renginio video ir foto med\u017Eiaga bus saugoma 5 metus, o po to bus sunaikinama, nebent teis\u0117s aktai nurodyt\u0173 kitaip.'
+                                                ),
+                                                _react2.default.createElement(
+                                                    'p',
+                                                    null,
+                                                    'Informuojame, kad J\u016Bs, kaip duomen\u0173 subjektas turite \u0161ias teises: susipa\u017Einti su tvarkomais asmens duomenimis, reikalauti juos i\u0161taisyti arba i\u0161trinti, apriboti duomen\u0173 tvarkym\u0105, teis\u0119 \u012F duomen\u0173 perkeliamum\u0105, taip pat J\u016Bs turite teis\u0119 bet kada at\u0161aukti \u0161\u012F savo duot\u0105 sutikim\u0105. Tais atvejais, jeigu \u012Ftariate, kad buvo pa\u017Eeistos J\u016Bs\u0173 teis\u0117s \u012F privat\u0173 gyvenim\u0105, galite kreiptis \u012F Valstybin\u0119 asmens duomen\u0173 apsaugos inspekcij\u0105. Nor\u0117dami gauti daugiau informacijos apie savo duomen\u0173 tvarkym\u0105, ra\u0161ykite mums el. pa\u0161tu Jonines@SGmore.lt.'
+                                                )
+                                            )
+                                        ),
+                                        _react2.default.createElement(
+                                            'div',
+                                            { className: 'form-group' },
+                                            _react2.default.createElement(
+                                                'div',
+                                                { className: personDataAgreementGroupClass },
+                                                _react2.default.createElement(
+                                                    'label',
+                                                    { htmlFor: 'personDataAgreement' },
+                                                    'Ar sutinkate, kad ',
+                                                    _react2.default.createElement(
+                                                        'b',
+                                                        null,
+                                                        'UAB Saint-Gobain statybos gaminiai'
+                                                    ),
+                                                    ' tvarkyt\u0173 j\u016Bs\u0173 asmens duomenis, nurodytus anketoje, Jonini\u0173 festivalio organizavimo ir b\u016Btinos komunikacijos tikslu?'
+                                                ),
+                                                _react2.default.createElement(_reactRadioButtonGroup2.default, {
+                                                    options: this.agreeDisagreeOptions,
+                                                    name: 'personDataAgreement',
+                                                    isStateful: true,
+                                                    onChange: function onChange(checkedValue) {
+                                                        return _this2.handleRadioChange(checkedValue);
+                                                    },
+                                                    inputClassName: 'ledas'
+                                                }),
+                                                _react2.default.createElement(
+                                                    'span',
+                                                    { className: 'help-block' },
+                                                    this.state.inputData.personDataAgreement.message
+                                                )
+                                            )
+                                        ),
+                                        _react2.default.createElement(
+                                            'div',
+                                            { className: 'form-group' },
+                                            _react2.default.createElement(
+                                                'div',
+                                                { className: personMediaAgreementGroupClass },
+                                                _react2.default.createElement(
+                                                    'label',
+                                                    { htmlFor: 'personMediaAgreement' },
+                                                    'Ar sutinkate, kad ',
+                                                    _react2.default.createElement(
+                                                        'b',
+                                                        null,
+                                                        'UAB Saint-Gobain statybos gaminiai'
+                                                    ),
+                                                    ' tvarkyt\u0173 j\u016Bs\u0173 video ir foto duomenis, siekdami panaudoti juos savo informaciniuose/reklaminiuose leidiniuose?'
+                                                ),
+                                                _react2.default.createElement(_reactRadioButtonGroup2.default, {
+                                                    options: this.agreeDisagreeOptions,
+                                                    name: 'personMediaAgreement',
+                                                    isStateful: true,
+                                                    onChange: function onChange(checkedValue) {
+                                                        return _this2.handleRadioChange(checkedValue);
+                                                    },
+                                                    inputClassName: 'ledas'
+                                                }),
+                                                _react2.default.createElement(
+                                                    'span',
+                                                    { className: 'help-block' },
+                                                    this.state.inputData.personMediaAgreement.message
+                                                )
                                             )
                                         ),
                                         _react2.default.createElement(

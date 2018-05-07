@@ -12,7 +12,8 @@ var expenseSchema = new Schema({
     arriveTime: String,
     customArriveTime: String,
     feeding: String,
-    rulesAccepted: Boolean,
+    personDataAgreement: String,
+    personMediaAgreement: String,
     safetyAccepted: Boolean
 });
 

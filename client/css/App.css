@@ -84,3 +84,11 @@ label{
 input.ledas {
   margin-right: 10px;
 }
+
+.areaClass {
+  border-radius: 10px 0px 0px 10px;
+  border: 1px solid #e5e5e5; 
+  height: 200px; 
+  overflow: auto; 
+  padding: 10px;
+}
