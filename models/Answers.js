@@ -8,7 +8,6 @@ var expenseSchema = new Schema({
     email: String,
     telephone: String,
     transport: String,
-    colleagueName: String,
     sleeping: String,
     arriveTime: String,
     customArriveTime: String,

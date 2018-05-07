@@ -15,7 +15,6 @@ router.route('/insert')
         answers.email = req.body.email;
         answers.telephone = req.body.telephone;
         answers.transport = req.body.transport;
-        answers.colleagueName = req.body.colleagueName;
         answers.sleeping = req.body.sleeping;
         answers.arriveTime = req.body.arriveTime;
         answers.customArriveTime = req.body.customArriveTime;

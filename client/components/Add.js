@@ -15,8 +15,8 @@ class Add extends React.Component {
         super();
         this.allTransportOptions = [
             "Atvyksiu nuosavu transportu",
-            "Domiuosi viešojo transporto variantu",
             "Planuoju prisijungti prie kolegos, vyksiančio savo transportu",
+            "Domiuosi viešojo transporto variantu",
         ];
         this.allSleepingOptions = [
             "Pasiliksiu renginyje iki kito ryto (su nuosava palapine)",
@@ -36,7 +36,6 @@ class Add extends React.Component {
                 email: { value: '', isValid: true, message: '' },
                 telephone: { value: '', isValid: true, message: '' },
                 transport: { value: '', isValid: true, message: '' },
-                colleagueName: { value: '', isValid: true, message: '' },
                 sleeping: { value: '', isValid: true, message: '' },
                 arriveTime: { value: '', isValid: true, message: '' },
                 customArriveTime: { value: '', isValid: true, message: '' },
@@ -115,13 +114,6 @@ class Add extends React.Component {
             this.setState(state);
             inputValid = false;
         }
-        if (state.inputData.transport.value == this.allTransportOptions[2] &&
-            state.inputData.colleagueName.value.length == 0) {
-            state.inputData.colleagueName.isValid = false;
-            state.inputData.colleagueName.message = 'Prašome įvesti kolegos vardą ir pavardę';
-            this.setState(state);
-            inputValid = false;
-        }
         if (state.inputData.arriveTime.value.length == 0) {
             state.inputData.arriveTime.isValid = false;
             state.inputData.arriveTime.message = 'Prašome pasirinkti atvykimo laiką';
@@ -189,7 +181,6 @@ class Add extends React.Component {
                 email: e.state.inputData.email.value,
                 telephone: e.state.inputData.telephone.value,
                 transport: e.state.inputData.transport.value,
-                colleagueName: e.state.inputData.colleagueName.value,
                 sleeping: e.state.inputData.sleeping.value,
                 arriveTime: e.state.inputData.arriveTime.value,
                 customArriveTime: e.state.inputData.customArriveTime.value,
@@ -275,7 +266,6 @@ class Add extends React.Component {
         var emailGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.email.isValid });
         var telephoneGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.telephone.isValid });
         var transportGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.transport.isValid });
-        var colleagueNameGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.colleagueName.isValid });
         var arriveTimeGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.arriveTime.isValid });
         var customArriveTimeGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.customArriveTime.isValid });
         var sleepingGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.sleeping.isValid });
@@ -332,12 +322,6 @@ class Add extends React.Component {
                                                     onChange={checkedValue => this.handleRadioChange(checkedValue)}
                                                     inputClassName="ledas"
                                                 />
-                                                {this.state.inputData.transport.value == 'Planuoju prisijungti prie kolegos, vyksiančio savo transportu' &&
-                                                    <div className={colleagueNameGroupClass}>
-                                                        <input type="text" className="form-control" id="colleagueName" name="colleagueName" value={this.state.colleagueName} onChange={this.handleTextChange} placeholder="Nurodykite kolegos vardą ir pavardę " />
-                                                        <span className="help-block">{this.state.inputData.colleagueName.message}</span>
-                                                    </div>
-                                                }
                                                 <span className="help-block">{this.state.inputData.transport.message}</span>
                                             </div>
                                             <div className={arriveTimeGroupClass}>
