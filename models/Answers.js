@@ -10,7 +10,6 @@ var expenseSchema = new Schema({
     transport: String,
     sleeping: String,
     arriveTime: String,
-    customArriveTime: String,
     feeding: String,
     personDataAgreement: String,
     personMediaAgreement: String,

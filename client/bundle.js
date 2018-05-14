@@ -40959,26 +40959,24 @@ var Add = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (Add.__proto__ || Object.getPrototypeOf(Add)).call(this));
 
-        _this.allTransportOptions = ["Atvyksiu nuosavu transportu", "Planuoju prisijungti prie kolegos, vyksiančio savo transportu", "Domiuosi viešojo transporto variantu"];
-        _this.allSleepingOptions = ["Pasiliksiu renginyje iki kito ryto (su nuosava palapine)", "Vakare planuoju išvykti iš renginio"];
-        _this.arriveOptions = ["09:30 – 10:30 val.", "10:30 – 11:30 val.", "Pasibaigus oficialios registracijos laikui"];
+        _this.allTransportOptions = ["Atvyksiu nuosavu transportu", "Planuoju prisijungti prie kolegos, vyksiančio savo transportu", "Renkuosi kitą alternatyvų variantą, tačiau vieta automobilių"];
+        _this.allSleepingOptions = ["Pasiliksiu iki kito ryto kempingo namelyje (vietų skaičius ribotas!)", "Pasiliksiu renginyje iki kito ryto su nuosava palapine", "Planuoju išvykti pasibaigus renginio programai"];
+        _this.arriveOptions = ["09:30 – 10:30 val.", "10:30 – 11:30 val."];
+        _this.allFeedingOptions = ["Esu vegetaras", "Esu veganas", "Valgau viską, kas skaniai pagaminta"];
         _this.agreeDisagreeOptions = ["Sutinku", "Nesutinku"];
         _this.state = {
             showSuccessScreen: false,
+            exactPersonExists: false,
             inputData: {
                 firstName: { value: '', isValid: true, message: '' },
                 lastName: { value: '', isValid: true, message: '' },
                 workplace: { value: '', isValid: true, message: '' },
                 email: { value: '', isValid: true, message: '' },
-                telephone: { value: '', isValid: true, message: '' },
+                telephone: { value: '+370', isValid: true, message: '' },
                 transport: { value: '', isValid: true, message: '' },
                 sleeping: { value: '', isValid: true, message: '' },
                 arriveTime: { value: '', isValid: true, message: '' },
-                customArriveTime: { value: '', isValid: true, message: '' },
-                feeding: {
-                    value: [{ title: "Esu vegetaras", index: "1", checked: false }, { title: "Esu veganas", index: "2", checked: false }, { title: "Valgau viską, kas skaniai pagaminta", index: "3", checked: false }, { title: "Renginio metu planuoju nevartoti alkoholinių gėrimų", index: "4", checked: false }],
-                    isValid: true, message: ''
-                },
+                feeding: { value: '', isValid: true, message: '' },
                 personDataAgreement: { value: '', isValid: true, message: '' },
                 personMediaAgreement: { value: '', isValid: true, message: '' },
                 safetyAccepted: { value: false, isValid: true, message: '' }
@@ -40992,8 +40990,9 @@ var Add = function (_React$Component) {
         _this.insertNewAnswers = _this.insertNewAnswers.bind(_this);
         _this.validateInputs = _this.validateInputs.bind(_this);
         _this.resetValidationStates = _this.resetValidationStates.bind(_this);
-        _this.concatFeedingValues = _this.concatFeedingValues.bind(_this);
         _this.handleCheckboxGroupChanged = _this.handleCheckboxGroupChanged.bind(_this);
+        _this.handleRadioChangeWithValidationRule = _this.handleRadioChangeWithValidationRule.bind(_this);
+        _this.checkExactPersonExistence = _this.checkExactPersonExistence.bind(_this);
         return _this;
     }
 
@@ -41004,7 +41003,7 @@ var Add = function (_React$Component) {
             this.resetValidationStates();
             var inputValid = this.validateInputs();
             if (inputValid) {
-                this.insertNewAnswers(this);
+                this.checkExactPersonExistence(this);
             }
         }
     }, {
@@ -41039,7 +41038,12 @@ var Add = function (_React$Component) {
             }
             if (state.inputData.telephone.value.length == 0) {
                 state.inputData.telephone.isValid = false;
-                state.inputData.telephone.message = 'Prašome įvesti savo savo tel. nr.';
+                state.inputData.telephone.message = 'Prašome įvesti savo tel. nr.';
+                this.setState(state);
+                inputValid = false;
+            } else if (state.inputData.telephone.value.length != 12) {
+                state.inputData.telephone.isValid = false;
+                state.inputData.telephone.message = 'Prašome įvesti teisingą tel. nr.';
                 this.setState(state);
                 inputValid = false;
             }
@@ -41055,25 +41059,15 @@ var Add = function (_React$Component) {
                 this.setState(state);
                 inputValid = false;
             }
-            if (state.inputData.arriveTime.value == this.arriveOptions[2] && state.inputData.customArriveTime.value.length == 0) {
-                state.inputData.customArriveTime.isValid = false;
-                state.inputData.customArriveTime.message = 'Prašome įvesti apytikslį atvykimo laiką';
-                this.setState(state);
-                inputValid = false;
-            }
             if (state.inputData.sleeping.value.length == 0) {
                 state.inputData.sleeping.isValid = false;
                 state.inputData.sleeping.message = 'Prašome pasirinkti nakvynės variantą';
                 this.setState(state);
                 inputValid = false;
             }
-            var feedingOptionSelected = false;
-            state.inputData.feeding.value.map(function (feedingChoice) {
-                if (feedingChoice.checked) feedingOptionSelected = true;
-            });
-            if (!feedingOptionSelected) {
+            if (state.inputData.feeding.value.length == 0) {
                 state.inputData.feeding.isValid = false;
-                state.inputData.feeding.message = 'Prašome pasirinkti maitinimo poreikius';
+                state.inputData.feeding.message = 'Prašome pasirinkti maitinimo variantą';
                 this.setState(state);
                 inputValid = false;
             }
@@ -41086,6 +41080,18 @@ var Add = function (_React$Component) {
             if (state.inputData.personMediaAgreement.value.length == 0) {
                 state.inputData.personMediaAgreement.isValid = false;
                 state.inputData.personMediaAgreement.message = 'Prašome pasirinkti ar sutinkate';
+                this.setState(state);
+                inputValid = false;
+            }
+            if (state.inputData.personDataAgreement.value == "Nesutinku") {
+                state.inputData.personDataAgreement.isValid = false;
+                state.inputData.personDataAgreement.message = 'Deja, jums nesuteikus prieigos prie jūsų duomenų, negalėsime pasidalinti renginio dalyviams privaloma žinoti informacija.';
+                this.setState(state);
+                inputValid = false;
+            }
+            if (state.inputData.personMediaAgreement.value == "Nesutinku") {
+                state.inputData.personMediaAgreement.isValid = false;
+                state.inputData.personMediaAgreement.message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje ar bendrame kadre.';
                 this.setState(state);
                 inputValid = false;
             }
@@ -41123,8 +41129,7 @@ var Add = function (_React$Component) {
                 transport: e.state.inputData.transport.value,
                 sleeping: e.state.inputData.sleeping.value,
                 arriveTime: e.state.inputData.arriveTime.value,
-                customArriveTime: e.state.inputData.customArriveTime.value,
-                feeding: this.concatFeedingValues(e.state.inputData.feeding.value),
+                feeding: e.state.inputData.feeding.value,
                 personDataAgreement: e.state.inputData.personDataAgreement.value,
                 personMediaAgreement: e.state.inputData.personMediaAgreement.value,
                 safetyAccepted: e.state.inputData.safetyAccepted.value
@@ -41141,16 +41146,43 @@ var Add = function (_React$Component) {
             });
         }
     }, {
-        key: 'concatFeedingValues',
-        value: function concatFeedingValues(feedingValues) {
-            var concatenatedValue = "";
-            feedingValues.map(function (value) {
-                if (value.checked) {
-                    concatenatedValue = concatenatedValue + value.title + "; ";
+        key: 'checkExactPersonExistence',
+        value: function checkExactPersonExistence(e) {
+            var firstName = e.state.inputData.firstName.value;
+            var lastName = e.state.inputData.lastName.value;
+            var email = e.state.inputData.email.value;
+            _axios2.default.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + "&email=" + email).then(function (response) {
+                console.log("Response: ", response);
+                e.setState({ exactPersonExists: response.data.length > 0 });
+                if (!e.state.exactPersonExists) {
+                    console.log("Length: ", response.data.length, "is: ", e.state.exactPersonExists);
+
+                    _axios2.default.post('/insert', querystring.stringify({
+                        firstName: e.state.inputData.firstName.value,
+                        lastName: e.state.inputData.lastName.value,
+                        workplace: e.state.inputData.workplace.value,
+                        email: e.state.inputData.email.value,
+                        telephone: e.state.inputData.telephone.value,
+                        transport: e.state.inputData.transport.value,
+                        sleeping: e.state.inputData.sleeping.value,
+                        arriveTime: e.state.inputData.arriveTime.value,
+                        feeding: e.state.inputData.feeding.value,
+                        personDataAgreement: e.state.inputData.personDataAgreement.value,
+                        personMediaAgreement: e.state.inputData.personMediaAgreement.value,
+                        safetyAccepted: e.state.inputData.safetyAccepted.value
+                    }), {
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        }
+                    }).then(function (response) {
+                        if (response && response.status != 200) {
+                            alert("Įvyko klaida. Prašome pakartoti.");
+                        } else {
+                            e.setState({ showSuccessScreen: true });
+                        }
+                    });
                 }
             });
-
-            return concatenatedValue;
         }
     }, {
         key: 'handleTextChange',
@@ -41187,6 +41219,30 @@ var Add = function (_React$Component) {
             return this.setState({ inputData: inputData });
         }
     }, {
+        key: 'handleRadioChangeWithValidationRule',
+        value: function handleRadioChangeWithValidationRule(value) {
+            var fieldName = event.target.name;
+            var inputData = this.state.inputData;
+            inputData[fieldName].value = value;
+
+            if (fieldName == "personDataAgreement" && value == "Nesutinku") {
+                inputData[fieldName].isValid = false;
+                inputData[fieldName].message = 'Deja, jums nesuteikus prieigos prie jūsų duomenų, negalėsime pasidalinti renginio dalyviams privaloma žinoti informacija.';
+            } else if (fieldName == "personDataAgreement" && value == "Sutinku") {
+                inputData[fieldName].isValid = true;
+                inputData[fieldName].message = '';
+            }
+            if (fieldName == "personMediaAgreement" && value == "Nesutinku") {
+                inputData[fieldName].isValid = false;
+                inputData[fieldName].message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje ar bendrame kadre.';
+            } else if (fieldName == "personMediaAgreement" && value == "Sutinku") {
+                inputData[fieldName].isValid = true;
+                inputData[fieldName].message = '';
+            }
+
+            return this.setState({ inputData: inputData });
+        }
+    }, {
         key: 'handleCheckboxGroupChanged',
         value: function handleCheckboxGroupChanged(event) {
             var index = event.target.name;
@@ -41213,12 +41269,12 @@ var Add = function (_React$Component) {
             var telephoneGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.telephone.isValid });
             var transportGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.transport.isValid });
             var arriveTimeGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.arriveTime.isValid });
-            var customArriveTimeGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.customArriveTime.isValid });
             var sleepingGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.sleeping.isValid });
             var feedingGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.feeding.isValid });
             var personDataAgreementGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.personDataAgreement.isValid });
             var personMediaAgreementGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.personMediaAgreement.isValid });
             var safetyAcceptedGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.safetyAccepted.isValid });
+            var exactPersonExistsGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.exactPersonExists });
 
             return _react2.default.createElement(
                 'div',
@@ -41244,13 +41300,22 @@ var Add = function (_React$Component) {
                             _react2.default.createElement(
                                 'h4',
                                 { className: 'section-header' },
-                                ' Saint-Gobain d\u017Eiaugiasi statydami ne tik namus, bet ir kasdien tvirt\u0117jant\u012F ry\u0161\u012F su savo klientais bei partneriais. \u012E \u0161i\u0105 kasdien tobulinam\u0105 konstrukcij\u0105 sud\u0117j\u0119 geriausius save, kvie\u010Diame jus \u2013 m\u016Bs\u0173 rimtus, pa\u0161\u0117lusius, k\u016Brybingus ar svajojan\u010Dius draugus \u2013 u\u017Epildyti ',
                                 _react2.default.createElement(
-                                    'b',
+                                    'p',
                                     null,
-                                    'Saint-Gobain MORE'
+                                    'Saint-Gobain d\u017Eiaugiasi statydami ne tik namus, bet ir kasdien tvirt\u0117jant\u012F ry\u0161\u012F su savo klientais bei partneriais. \u012E \u0161i\u0105 kasdien tobulinam\u0105 konstrukcij\u0105 sud\u0117j\u0119 geriausius save, kvie\u010Diame jus \u2013 m\u016Bs\u0173 rimtus, pa\u0161\u0117lusius, k\u016Brybingus ar svajojan\u010Dius draugus \u2013 u\u017Epildyti ',
+                                    _react2.default.createElement(
+                                        'b',
+                                        null,
+                                        'Saint-Gobain MORE'
+                                    ),
+                                    ' Jonini\u0173 festivalio dalyvio anket\u0105'
                                 ),
-                                ' Jonini\u0173 festivalio dalyvio anket\u0105'
+                                _react2.default.createElement(
+                                    'p',
+                                    null,
+                                    'U\u017Epild\u017Eius anket\u0105, registracija galioja vienam \u2013 j\u0105 u\u017Epild\u017Eiusiam \u2013 asmeniui.'
+                                )
                             )
                         ),
                         _react2.default.createElement(
@@ -41333,7 +41398,7 @@ var Add = function (_React$Component) {
                                                 { htmlFor: 'telephone' },
                                                 'Tel. Nr.'
                                             ),
-                                            _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'telephone', name: 'telephone', value: this.state.telephone, onChange: this.handleTextChange, placeholder: '\u012Eveskite savo telefono numer\u012F' }),
+                                            _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'telephone', name: 'telephone', value: this.state.telephone, defaultValue: '+370', onChange: this.handleTextChange, placeholder: '\u012Eveskite savo telefono numer\u012F' }),
                                             _react2.default.createElement(
                                                 'span',
                                                 { className: 'help-block' },
@@ -41362,6 +41427,11 @@ var Add = function (_React$Component) {
                                                 inputClassName: 'ledas'
                                             }),
                                             _react2.default.createElement(
+                                                'label',
+                                                { className: 'checkboxNewLine' },
+                                                'stov\u0117jimo aik\u0161tel\u0117je man bus nereikalinga'
+                                            ),
+                                            _react2.default.createElement(
                                                 'span',
                                                 { className: 'help-block' },
                                                 this.state.inputData.transport.message
@@ -41383,18 +41453,7 @@ var Add = function (_React$Component) {
                                                     return _this2.handleRadioChange(checkedValue);
                                                 },
                                                 inputClassName: 'ledas'
-
                                             }),
-                                            this.state.inputData.arriveTime.value == "Pasibaigus oficialios registracijos laikui" && _react2.default.createElement(
-                                                'div',
-                                                { className: customArriveTimeGroupClass },
-                                                _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'customArriveTime', name: 'customArriveTime', value: this.state.customArriveTime, onChange: this.handleTextChange, placeholder: 'Nurodykite apytiksl\u012F laik\u0105' }),
-                                                _react2.default.createElement(
-                                                    'span',
-                                                    { className: 'help-block' },
-                                                    this.state.inputData.customArriveTime.message
-                                                )
-                                            ),
                                             _react2.default.createElement(
                                                 'span',
                                                 { className: 'help-block' },
@@ -41429,30 +41488,18 @@ var Add = function (_React$Component) {
                                             { className: feedingGroupClass },
                                             _react2.default.createElement(
                                                 'label',
-                                                null,
+                                                { htmlFor: 'feeding' },
                                                 'Maitinimo poreikiai'
                                             ),
-                                            _react2.default.createElement(
-                                                'div',
-                                                null,
-                                                this.state.inputData.feeding.value.map(function (feedingOption) {
-                                                    return _react2.default.createElement(
-                                                        'div',
-                                                        { key: feedingOption.index },
-                                                        _react2.default.createElement('input', { className: 'form-check-input', type: 'checkbox',
-                                                            name: feedingOption.index,
-                                                            id: feedingOption.index,
-                                                            checked: feedingOption.checked,
-                                                            onChange: _this2.handleCheckboxGroupChanged
-                                                        }),
-                                                        _react2.default.createElement(
-                                                            'label',
-                                                            { className: 'label-margin', htmlFor: feedingOption.index },
-                                                            feedingOption.title
-                                                        )
-                                                    );
-                                                })
-                                            ),
+                                            _react2.default.createElement(_reactRadioButtonGroup2.default, {
+                                                options: this.allFeedingOptions,
+                                                name: 'feeding',
+                                                isStateful: true,
+                                                onChange: function onChange(checkedValue) {
+                                                    return _this2.handleRadioChange(checkedValue);
+                                                },
+                                                inputClassName: 'ledas'
+                                            }),
                                             _react2.default.createElement(
                                                 'span',
                                                 { className: 'help-block' },
@@ -41517,7 +41564,7 @@ var Add = function (_React$Component) {
                                                     name: 'personDataAgreement',
                                                     isStateful: true,
                                                     onChange: function onChange(checkedValue) {
-                                                        return _this2.handleRadioChange(checkedValue);
+                                                        return _this2.handleRadioChangeWithValidationRule(checkedValue);
                                                     },
                                                     inputClassName: 'ledas'
                                                 }),
@@ -41550,7 +41597,7 @@ var Add = function (_React$Component) {
                                                     name: 'personMediaAgreement',
                                                     isStateful: true,
                                                     onChange: function onChange(checkedValue) {
-                                                        return _this2.handleRadioChange(checkedValue);
+                                                        return _this2.handleRadioChangeWithValidationRule(checkedValue);
                                                     },
                                                     inputClassName: 'ledas'
                                                 }),
@@ -41579,6 +41626,24 @@ var Add = function (_React$Component) {
                                                 'span',
                                                 { className: 'help-block' },
                                                 this.state.inputData.safetyAccepted.message
+                                            )
+                                        ),
+                                        _react2.default.createElement(
+                                            'div',
+                                            { className: 'form-group' },
+                                            _react2.default.createElement(
+                                                'label',
+                                                null,
+                                                'I\u0161kilus daugiau klausim\u0173 maloniai kvie\u010Diame kreiptis \u012F Saint-Gobain \u012Fmon\u0117s atstov\u0105 K\u0119stut\u012F Pui\u0161\u012F, +370 674 39910'
+                                            )
+                                        ),
+                                        _react2.default.createElement(
+                                            'div',
+                                            { className: exactPersonExistsGroupClass },
+                                            this.state.exactPersonExists && _react2.default.createElement(
+                                                'span',
+                                                { className: 'help-block' },
+                                                'Asmuo su tokiu vardu, pavarde ir el. pa\u0161tu jau yra u\u017Eregistruotas'
                                             )
                                         ),
                                         _react2.default.createElement(

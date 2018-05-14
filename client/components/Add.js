@@ -16,16 +16,21 @@ class Add extends React.Component {
         this.allTransportOptions = [
             "Atvyksiu nuosavu transportu",
             "Planuoju prisijungti prie kolegos, vyksiančio savo transportu",
-            "Domiuosi viešojo transporto variantu",
+            "Renkuosi kitą alternatyvų variantą, tačiau vieta automobilių",
         ];
         this.allSleepingOptions = [
-            "Pasiliksiu renginyje iki kito ryto (su nuosava palapine)",
-            "Vakare planuoju išvykti iš renginio"
+            "Pasiliksiu iki kito ryto kempingo namelyje (vietų skaičius ribotas!)",
+            "Pasiliksiu renginyje iki kito ryto su nuosava palapine",
+            "Planuoju išvykti pasibaigus renginio programai"
         ];
         this.arriveOptions = [
             "09:30 – 10:30 val.",
-            "10:30 – 11:30 val.",
-            "Pasibaigus oficialios registracijos laikui"
+            "10:30 – 11:30 val."
+        ];
+        this.allFeedingOptions = [
+            "Esu vegetaras",
+            "Esu veganas",
+            "Valgau viską, kas skaniai pagaminta"
         ];
         this.agreeDisagreeOptions = [
             "Sutinku",
@@ -33,29 +38,20 @@ class Add extends React.Component {
         ];
         this.state = {
             showSuccessScreen: false,
+            exactPersonExists: false,
             inputData: {
                 firstName: { value: '', isValid: true, message: '' },
                 lastName: { value: '', isValid: true, message: '' },
                 workplace: { value: '', isValid: true, message: '' },
                 email: { value: '', isValid: true, message: '' },
-                telephone: { value: '', isValid: true, message: '' },
+                telephone: { value: '+370', isValid: true, message: '' },
                 transport: { value: '', isValid: true, message: '' },
                 sleeping: { value: '', isValid: true, message: '' },
                 arriveTime: { value: '', isValid: true, message: '' },
-                customArriveTime: { value: '', isValid: true, message: '' },
-                feeding: {
-                    value:
-                        [
-                            { title: "Esu vegetaras", index: "1", checked: false },
-                            { title: "Esu veganas", index: "2", checked: false },
-                            { title: "Valgau viską, kas skaniai pagaminta", index: "3", checked: false },
-                            { title: "Renginio metu planuoju nevartoti alkoholinių gėrimų", index: "4", checked: false }
-                        ],
-                    isValid: true, message: ''
-                },
+                feeding: { value: '', isValid: true, message: '' },
                 personDataAgreement: { value: '', isValid: true, message: '' },
                 personMediaAgreement: { value: '', isValid: true, message: '' },
-                safetyAccepted: { value: false, isValid: true, message: '' },
+                safetyAccepted: { value: false, isValid: true, message: '' }
             }
         }
         this.onSave = this.onSave.bind(this);
@@ -66,8 +62,9 @@ class Add extends React.Component {
         this.insertNewAnswers = this.insertNewAnswers.bind(this);
         this.validateInputs = this.validateInputs.bind(this);
         this.resetValidationStates = this.resetValidationStates.bind(this);
-        this.concatFeedingValues = this.concatFeedingValues.bind(this);
         this.handleCheckboxGroupChanged = this.handleCheckboxGroupChanged.bind(this);
+        this.handleRadioChangeWithValidationRule = this.handleRadioChangeWithValidationRule.bind(this);
+        this.checkExactPersonExistence = this.checkExactPersonExistence.bind(this);
     }
 
     onSave(e) {
@@ -75,7 +72,7 @@ class Add extends React.Component {
         this.resetValidationStates();
         var inputValid = this.validateInputs();
         if (inputValid) {
-            this.insertNewAnswers(this);
+            this.checkExactPersonExistence(this);
         }
     }
 
@@ -109,7 +106,13 @@ class Add extends React.Component {
         }
         if (state.inputData.telephone.value.length == 0) {
             state.inputData.telephone.isValid = false;
-            state.inputData.telephone.message = 'Prašome įvesti savo savo tel. nr.';
+            state.inputData.telephone.message = 'Prašome įvesti savo tel. nr.';
+            this.setState(state);
+            inputValid = false;
+        }
+        else if (state.inputData.telephone.value.length != 12) {
+            state.inputData.telephone.isValid = false;
+            state.inputData.telephone.message = 'Prašome įvesti teisingą tel. nr.';
             this.setState(state);
             inputValid = false;
         }
@@ -125,27 +128,15 @@ class Add extends React.Component {
             this.setState(state);
             inputValid = false;
         }
-        if (state.inputData.arriveTime.value == this.arriveOptions[2] &&
-            state.inputData.customArriveTime.value.length == 0) {
-            state.inputData.customArriveTime.isValid = false;
-            state.inputData.customArriveTime.message = 'Prašome įvesti apytikslį atvykimo laiką';
-            this.setState(state);
-            inputValid = false;
-        }
         if (state.inputData.sleeping.value.length == 0) {
             state.inputData.sleeping.isValid = false;
             state.inputData.sleeping.message = 'Prašome pasirinkti nakvynės variantą';
             this.setState(state);
             inputValid = false;
         }
-        var feedingOptionSelected = false;
-        state.inputData.feeding.value.map(feedingChoice => {
-            if (feedingChoice.checked)
-                feedingOptionSelected = true;
-        });
-        if (!feedingOptionSelected) {
+        if (state.inputData.feeding.value.length == 0) {
             state.inputData.feeding.isValid = false;
-            state.inputData.feeding.message = 'Prašome pasirinkti maitinimo poreikius';
+            state.inputData.feeding.message = 'Prašome pasirinkti maitinimo variantą';
             this.setState(state);
             inputValid = false;
         }
@@ -158,6 +149,18 @@ class Add extends React.Component {
         if (state.inputData.personMediaAgreement.value.length == 0) {
             state.inputData.personMediaAgreement.isValid = false;
             state.inputData.personMediaAgreement.message = 'Prašome pasirinkti ar sutinkate';
+            this.setState(state);
+            inputValid = false;
+        }
+        if (state.inputData.personDataAgreement.value == "Nesutinku") {
+            state.inputData.personDataAgreement.isValid = false;
+            state.inputData.personDataAgreement.message = 'Deja, jums nesuteikus prieigos prie jūsų duomenų, negalėsime pasidalinti renginio dalyviams privaloma žinoti informacija.';
+            this.setState(state);
+            inputValid = false;
+        }
+        if (state.inputData.personMediaAgreement.value == "Nesutinku") {
+            state.inputData.personMediaAgreement.isValid = false;
+            state.inputData.personMediaAgreement.message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje ar bendrame kadre.';
             this.setState(state);
             inputValid = false;
         }
@@ -194,8 +197,7 @@ class Add extends React.Component {
                 transport: e.state.inputData.transport.value,
                 sleeping: e.state.inputData.sleeping.value,
                 arriveTime: e.state.inputData.arriveTime.value,
-                customArriveTime: e.state.inputData.customArriveTime.value,
-                feeding: this.concatFeedingValues(e.state.inputData.feeding.value),
+                feeding: e.state.inputData.feeding.value,
                 personDataAgreement: e.state.inputData.personDataAgreement.value,
                 personMediaAgreement: e.state.inputData.personMediaAgreement.value,
                 safetyAccepted: e.state.inputData.safetyAccepted.value
@@ -213,15 +215,46 @@ class Add extends React.Component {
             });
     }
 
-    concatFeedingValues(feedingValues) {
-        var concatenatedValue = "";
-        feedingValues.map(value => {
-            if (value.checked) {
-                concatenatedValue = concatenatedValue + value.title + "; "
-            }
-        });
+    checkExactPersonExistence(e) {
+        var firstName = e.state.inputData.firstName.value;
+        var lastName = e.state.inputData.lastName.value;
+        var email = e.state.inputData.email.value;
+        axios.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + "&email=" + email)
+            .then(function (response) {
+                console.log("Response: ", response);
+                e.setState({ exactPersonExists: response.data.length > 0 });
+                if (!e.state.exactPersonExists) {
+                    console.log("Length: ", response.data.length, "is: ", e.state.exactPersonExists);
+                    
 
-        return concatenatedValue;
+                    axios.post('/insert',
+                        querystring.stringify({
+                            firstName: e.state.inputData.firstName.value,
+                            lastName: e.state.inputData.lastName.value,
+                            workplace: e.state.inputData.workplace.value,
+                            email: e.state.inputData.email.value,
+                            telephone: e.state.inputData.telephone.value,
+                            transport: e.state.inputData.transport.value,
+                            sleeping: e.state.inputData.sleeping.value,
+                            arriveTime: e.state.inputData.arriveTime.value,
+                            feeding: e.state.inputData.feeding.value,
+                            personDataAgreement: e.state.inputData.personDataAgreement.value,
+                            personMediaAgreement: e.state.inputData.personMediaAgreement.value,
+                            safetyAccepted: e.state.inputData.safetyAccepted.value
+                        }), {
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            }
+                        }).then(function (response) {
+                            if (response && response.status != 200) {
+                                alert("Įvyko klaida. Prašome pakartoti.");
+                            }
+                            else {
+                                e.setState({ showSuccessScreen: true });
+                            }
+                        });
+                } 
+            });
     }
 
     handleTextChange(event) {
@@ -254,6 +287,31 @@ class Add extends React.Component {
         return this.setState({ inputData: inputData });
     }
 
+    handleRadioChangeWithValidationRule(value) {
+        const fieldName = event.target.name;
+        let inputData = this.state.inputData;
+        inputData[fieldName].value = value;
+
+        if (fieldName == "personDataAgreement" && value == "Nesutinku") {
+            inputData[fieldName].isValid = false;
+            inputData[fieldName].message = 'Deja, jums nesuteikus prieigos prie jūsų duomenų, negalėsime pasidalinti renginio dalyviams privaloma žinoti informacija.';
+        }
+        else if (fieldName == "personDataAgreement" && value == "Sutinku") {
+            inputData[fieldName].isValid = true;
+            inputData[fieldName].message = '';
+        }
+        if (fieldName == "personMediaAgreement" && value == "Nesutinku") {
+            inputData[fieldName].isValid = false;
+            inputData[fieldName].message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje ar bendrame kadre.';
+        }
+        else if (fieldName == "personMediaAgreement" && value == "Sutinku") {
+            inputData[fieldName].isValid = true;
+            inputData[fieldName].message = '';
+        }
+
+        return this.setState({ inputData: inputData });
+    }
+
     handleCheckboxGroupChanged(event) {
         const index = event.target.name;
         let inputData = this.state.inputData;
@@ -266,7 +324,6 @@ class Add extends React.Component {
     }
 
     render() {
-
         /*
       Each of the group classes below will include the 'form-group' class, and will only
       include the 'has-error' class if the isValid value is false.
@@ -278,12 +335,12 @@ class Add extends React.Component {
         var telephoneGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.telephone.isValid });
         var transportGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.transport.isValid });
         var arriveTimeGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.arriveTime.isValid });
-        var customArriveTimeGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.customArriveTime.isValid });
         var sleepingGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.sleeping.isValid });
         var feedingGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.feeding.isValid });
         var personDataAgreementGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.personDataAgreement.isValid });
         var personMediaAgreementGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.personMediaAgreement.isValid });
         var safetyAcceptedGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.safetyAccepted.isValid });
+        var exactPersonExistsGroupClass = classNames('form-group', { 'has-error': !this.state.exactPersonExists });
 
         return (
             <div>
@@ -292,7 +349,10 @@ class Add extends React.Component {
                     {!this.state.showSuccessScreen &&
                         <div>
                             <div className="section-content">
-                                <h4 className="section-header"> Saint-Gobain džiaugiasi statydami ne tik namus, bet ir kasdien tvirtėjantį ryšį su savo klientais bei partneriais. Į šią kasdien tobulinamą konstrukciją sudėję geriausius save, kviečiame jus – mūsų rimtus, pašėlusius, kūrybingus ar svajojančius draugus – užpildyti <b>Saint-Gobain MORE</b> Joninių festivalio dalyvio anketą</h4>
+                                <h4 className="section-header">
+                                    <p>Saint-Gobain džiaugiasi statydami ne tik namus, bet ir kasdien tvirtėjantį ryšį su savo klientais bei partneriais. Į šią kasdien tobulinamą konstrukciją sudėję geriausius save, kviečiame jus – mūsų rimtus, pašėlusius, kūrybingus ar svajojančius draugus – užpildyti <b>Saint-Gobain MORE</b> Joninių festivalio dalyvio anketą</p>
+                                    <p>Užpildžius anketą, registracija galioja vienam – ją užpildžiusiam – asmeniui.</p>
+                                </h4>
                             </div>
                             <div className="container contact-section">
                                 <form onSubmit={this.onSave}>
@@ -320,7 +380,7 @@ class Add extends React.Component {
                                             </div>
                                             <div className={telephoneGroupClass}>
                                                 <label htmlFor="telephone">Tel. Nr.</label>
-                                                <input type="text" className="form-control" id="telephone" name="telephone" value={this.state.telephone} onChange={this.handleTextChange} placeholder="Įveskite savo telefono numerį" />
+                                                <input type="text" className="form-control" id="telephone" name="telephone" value={this.state.telephone} defaultValue="+370" onChange={this.handleTextChange} placeholder="Įveskite savo telefono numerį" />
                                                 <span className="help-block">{this.state.inputData.telephone.message}</span>
                                             </div>
                                         </div>
@@ -334,6 +394,7 @@ class Add extends React.Component {
                                                     onChange={checkedValue => this.handleRadioChange(checkedValue)}
                                                     inputClassName="ledas"
                                                 />
+                                                <label className="checkboxNewLine">stovėjimo aikštelėje man bus nereikalinga</label>
                                                 <span className="help-block">{this.state.inputData.transport.message}</span>
                                             </div>
                                             <div className={arriveTimeGroupClass}>
@@ -344,17 +405,8 @@ class Add extends React.Component {
                                                     isStateful={true}
                                                     onChange={checkedValue => this.handleRadioChange(checkedValue)}
                                                     inputClassName="ledas"
-
                                                 >
                                                 </ReactRadioButtonGroup>
-                                                {this.state.inputData.arriveTime.value == "Pasibaigus oficialios registracijos laikui" &&
-                                                    <div className={customArriveTimeGroupClass}>
-                                                        <input type="text" className="form-control" id="customArriveTime" name="customArriveTime" value={this.state.customArriveTime} onChange={this.handleTextChange} placeholder="Nurodykite apytikslį laiką" />
-                                                        {/* <label htmlFor="customArriveTime">Nurodykite apytikslį laiką</label> */}
-                                                        {/* <TimePicker id="customArriveTime" onChange={this.handleTimeChange} value={this.state.customArriveTime} /> */}
-                                                        <span className="help-block">{this.state.inputData.customArriveTime.message}</span>
-                                                    </div>
-                                                }
                                                 <span className="help-block">{this.state.inputData.arriveTime.message}</span>
                                             </div>
                                             <div className={sleepingGroupClass}>
@@ -370,20 +422,15 @@ class Add extends React.Component {
                                                 <span className="help-block">{this.state.inputData.sleeping.message}</span>
                                             </div>
                                             <div className={feedingGroupClass}>
-                                                <label>Maitinimo poreikiai</label>
-                                                <div>
-                                                    {this.state.inputData.feeding.value.map(feedingOption =>
-                                                        <div key={feedingOption.index}>
-                                                            <input className="form-check-input" type="checkbox"
-                                                                name={feedingOption.index}
-                                                                id={feedingOption.index}
-                                                                checked={feedingOption.checked}
-                                                                onChange={this.handleCheckboxGroupChanged}
-                                                            />
-                                                            <label className="label-margin" htmlFor={feedingOption.index}>{feedingOption.title}</label>
-                                                        </div>
-                                                    )}
-                                                </div>
+                                                <label htmlFor="feeding">Maitinimo poreikiai</label>
+                                                <ReactRadioButtonGroup
+                                                    options={this.allFeedingOptions}
+                                                    name="feeding"
+                                                    isStateful={true}
+                                                    onChange={checkedValue => this.handleRadioChange(checkedValue)}
+                                                    inputClassName="ledas"
+                                                >
+                                                </ReactRadioButtonGroup>
                                                 <span className="help-block">{this.state.inputData.feeding.message}</span>
                                             </div>
                                         </div>
@@ -400,12 +447,12 @@ class Add extends React.Component {
                                             </div>
                                             <div className="form-group">
                                                 <div className={personDataAgreementGroupClass}>
-                                                <label htmlFor="personDataAgreement">Ar sutinkate, kad <b>UAB Saint-Gobain statybos gaminiai</b> tvarkytų jūsų asmens duomenis, nurodytus anketoje, Joninių festivalio organizavimo ir būtinos komunikacijos tikslu?</label>
+                                                    <label htmlFor="personDataAgreement">Ar sutinkate, kad <b>UAB Saint-Gobain statybos gaminiai</b> tvarkytų jūsų asmens duomenis, nurodytus anketoje, Joninių festivalio organizavimo ir būtinos komunikacijos tikslu?</label>
                                                     <ReactRadioButtonGroup
                                                         options={this.agreeDisagreeOptions}
                                                         name="personDataAgreement"
                                                         isStateful={true}
-                                                        onChange={checkedValue => this.handleRadioChange(checkedValue)}
+                                                        onChange={checkedValue => this.handleRadioChangeWithValidationRule(checkedValue)}
                                                         inputClassName="ledas"
                                                     />
                                                     <span className="help-block">{this.state.inputData.personDataAgreement.message}</span>
@@ -413,12 +460,12 @@ class Add extends React.Component {
                                             </div>
                                             <div className="form-group">
                                                 <div className={personMediaAgreementGroupClass}>
-                                                <label htmlFor="personMediaAgreement">Ar sutinkate, kad <b>UAB Saint-Gobain statybos gaminiai</b> tvarkytų jūsų video ir foto duomenis, siekdami panaudoti juos savo informaciniuose/reklaminiuose leidiniuose?</label>
+                                                    <label htmlFor="personMediaAgreement">Ar sutinkate, kad <b>UAB Saint-Gobain statybos gaminiai</b> tvarkytų jūsų video ir foto duomenis, siekdami panaudoti juos savo informaciniuose/reklaminiuose leidiniuose?</label>
                                                     <ReactRadioButtonGroup
                                                         options={this.agreeDisagreeOptions}
                                                         name="personMediaAgreement"
                                                         isStateful={true}
-                                                        onChange={checkedValue => this.handleRadioChange(checkedValue)}
+                                                        onChange={checkedValue => this.handleRadioChangeWithValidationRule(checkedValue)}
                                                         inputClassName="ledas"
                                                     />
                                                     <span className="help-block">{this.state.inputData.personMediaAgreement.message}</span>
@@ -433,6 +480,16 @@ class Add extends React.Component {
                                                 />
                                                 <label className="label-margin" htmlFor="safetyAccepted">Už savo saugumą renginyje esu atsakingas pats</label>
                                                 <span className="help-block">{this.state.inputData.safetyAccepted.message}</span>
+                                            </div>
+                                            <div className="form-group">
+                                                <label>
+                                                    Iškilus daugiau klausimų maloniai kviečiame kreiptis į Saint-Gobain įmonės atstovą Kęstutį Puišį, +370 674 39910
+                                            </label>
+                                            </div>
+                                            <div className={exactPersonExistsGroupClass}>
+                                                {this.state.exactPersonExists &&
+                                                    <span className="help-block">Asmuo su tokiu vardu, pavarde ir el. paštu jau yra užregistruotas</span>
+                                                }
                                             </div>
                                             <button className="btn btn-lg btn-primary btn-block" type="submit">Išsaugoti</button>
                                             <br />

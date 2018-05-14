@@ -92,3 +92,7 @@ input.ledas {
   overflow: auto; 
   padding: 10px;
 }
+
+.checkboxNewLine {
+  margin-left: 23px;
+}

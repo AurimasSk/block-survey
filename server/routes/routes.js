@@ -17,16 +17,26 @@ router.route('/insert')
         answers.transport = req.body.transport;
         answers.sleeping = req.body.sleeping;
         answers.arriveTime = req.body.arriveTime;
-        answers.customArriveTime = req.body.customArriveTime;
         answers.feeding = req.body.feeding;
         answers.personDataAgreement = req.body.personDataAgreement;
         answers.personMediaAgreement = req.body.personMediaAgreement;
         answers.safetyAccepted = req.body.safetyAccepted;
 
         answers.save(function (err) {
-             if (err)
+            if (err)
                 res.send(err);
-             res.send('Answers successfully added!');
+            res.send('Answers successfully added!');
         });
     })
+router.get('/getExactPerson', function (req, res) {
+    var firstName = req.query.firstName;
+    var lastName = req.query.lastName;
+    var email = req.query.email;
+    Answers.find({ $and: [{ firstName: firstName }, { lastName: lastName }, { email: email }] },
+        function (err, answers) {
+            if (err)
+                res.send(err);
+            res.json(answers);
+        });
+});
 module.exports = router;
