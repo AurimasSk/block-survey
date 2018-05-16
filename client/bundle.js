@@ -40967,6 +40967,7 @@ var Add = function (_React$Component) {
         _this.state = {
             showSuccessScreen: false,
             exactPersonExists: false,
+            counterValue: 0,
             inputData: {
                 firstName: { value: '', isValid: true, message: '' },
                 lastName: { value: '', isValid: true, message: '' },
@@ -40993,10 +40994,17 @@ var Add = function (_React$Component) {
         _this.handleCheckboxGroupChanged = _this.handleCheckboxGroupChanged.bind(_this);
         _this.handleRadioChangeWithValidationRule = _this.handleRadioChangeWithValidationRule.bind(_this);
         _this.checkExactPersonExistence = _this.checkExactPersonExistence.bind(_this);
+        _this.getCounterValue = _this.getCounterValue.bind(_this);
         return _this;
     }
 
     _createClass(Add, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            console.log("Calling get value");
+            // this.getCounterValue(this);
+        }
+    }, {
         key: 'onSave',
         value: function onSave(e) {
             e.preventDefault();
@@ -41118,6 +41126,18 @@ var Add = function (_React$Component) {
             this.setState(state);
         }
     }, {
+        key: 'getCounterValue',
+        value: function getCounterValue(e) {
+            console.log("Inside counter value method");
+            _axios2.default.get('/getCounterValue?counterId=1').then(function (response) {
+                console.log("Counter value: ", response.data[0].counterValue);
+                var state = e.state;
+                state.counterValue = response.data[0].counterValue;
+
+                e.setState(state);
+            });
+        }
+    }, {
         key: 'insertNewAnswers',
         value: function insertNewAnswers(e) {
             _axios2.default.post('/insert', querystring.stringify({
@@ -41178,6 +41198,13 @@ var Add = function (_React$Component) {
                         if (response && response.status != 200) {
                             alert("Įvyko klaida. Prašome pakartoti.");
                         } else {
+
+                            // axios.get('/updateCounter?counterId=1')
+                            //     .then(function (response) {
+                            //         console.log("Counter value: ", response);
+                            //         e.setState({ showSuccessScreen: true });
+                            //     });
+
                             e.setState({ showSuccessScreen: true });
                         }
                     });
@@ -41234,7 +41261,7 @@ var Add = function (_React$Component) {
             }
             if (fieldName == "personMediaAgreement" && value == "Nesutinku") {
                 inputData[fieldName].isValid = false;
-                inputData[fieldName].message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje ar bendrame kadre.';
+                inputData[fieldName].message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje.';
             } else if (fieldName == "personMediaAgreement" && value == "Sutinku") {
                 inputData[fieldName].isValid = true;
                 inputData[fieldName].message = '';
@@ -41276,6 +41303,11 @@ var Add = function (_React$Component) {
             var safetyAcceptedGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.safetyAccepted.isValid });
             var exactPersonExistsGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.exactPersonExists });
 
+            // console.log("On render: ", this.state.counterValue);
+            // if (this.state.counterValue > -1 && this.allSleepingOptions.length == 3) {
+            //     this.allSleepingOptions.splice(0, 1);
+            // }
+
             return _react2.default.createElement(
                 'div',
                 null,
@@ -41300,6 +41332,15 @@ var Add = function (_React$Component) {
                             _react2.default.createElement(
                                 'h4',
                                 { className: 'section-header' },
+                                _react2.default.createElement(
+                                    'p',
+                                    null,
+                                    _react2.default.createElement(
+                                        'b',
+                                        null,
+                                        ' Dalyvio anketa'
+                                    )
+                                ),
                                 _react2.default.createElement(
                                     'p',
                                     null,

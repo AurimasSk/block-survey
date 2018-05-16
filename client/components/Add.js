@@ -39,6 +39,7 @@ class Add extends React.Component {
         this.state = {
             showSuccessScreen: false,
             exactPersonExists: false,
+            counterValue: 0,
             inputData: {
                 firstName: { value: '', isValid: true, message: '' },
                 lastName: { value: '', isValid: true, message: '' },
@@ -65,6 +66,12 @@ class Add extends React.Component {
         this.handleCheckboxGroupChanged = this.handleCheckboxGroupChanged.bind(this);
         this.handleRadioChangeWithValidationRule = this.handleRadioChangeWithValidationRule.bind(this);
         this.checkExactPersonExistence = this.checkExactPersonExistence.bind(this);
+        this.getCounterValue = this.getCounterValue.bind(this);
+    }
+
+    componentDidMount() {
+        console.log("Calling get value");
+        // this.getCounterValue(this);
     }
 
     onSave(e) {
@@ -160,7 +167,7 @@ class Add extends React.Component {
         }
         if (state.inputData.personMediaAgreement.value == "Nesutinku") {
             state.inputData.personMediaAgreement.isValid = false;
-            state.inputData.personMediaAgreement.message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje ar bendrame kadre.';
+            state.inputData.personMediaAgreement.message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje.';
             this.setState(state);
             inputValid = false;
         }
@@ -184,6 +191,18 @@ class Add extends React.Component {
             }
         });
         this.setState(state);
+    }
+
+    getCounterValue(e) {
+        console.log("Inside counter value method");
+        axios.get('/getCounterValue?counterId=1')
+            .then(function (response) {
+                console.log("Counter value: ", response.data[0].counterValue);
+                var state = e.state;
+                state.counterValue = response.data[0].counterValue;
+
+                e.setState(state);
+            });
     }
 
     insertNewAnswers(e) {
@@ -225,7 +244,6 @@ class Add extends React.Component {
                 e.setState({ exactPersonExists: response.data.length > 0 });
                 if (!e.state.exactPersonExists) {
                     console.log("Length: ", response.data.length, "is: ", e.state.exactPersonExists);
-                    
 
                     axios.post('/insert',
                         querystring.stringify({
@@ -250,10 +268,17 @@ class Add extends React.Component {
                                 alert("Įvyko klaida. Prašome pakartoti.");
                             }
                             else {
+
+                                // axios.get('/updateCounter?counterId=1')
+                                //     .then(function (response) {
+                                //         console.log("Counter value: ", response);
+                                //         e.setState({ showSuccessScreen: true });
+                                //     });
+
                                 e.setState({ showSuccessScreen: true });
                             }
                         });
-                } 
+                }
             });
     }
 
@@ -302,7 +327,7 @@ class Add extends React.Component {
         }
         if (fieldName == "personMediaAgreement" && value == "Nesutinku") {
             inputData[fieldName].isValid = false;
-            inputData[fieldName].message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje ar bendrame kadre.';
+            inputData[fieldName].message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje.';
         }
         else if (fieldName == "personMediaAgreement" && value == "Sutinku") {
             inputData[fieldName].isValid = true;
@@ -342,6 +367,11 @@ class Add extends React.Component {
         var safetyAcceptedGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.safetyAccepted.isValid });
         var exactPersonExistsGroupClass = classNames('form-group', { 'has-error': !this.state.exactPersonExists });
 
+        // console.log("On render: ", this.state.counterValue);
+        // if (this.state.counterValue > -1 && this.allSleepingOptions.length == 3) {
+        //     this.allSleepingOptions.splice(0, 1);
+        // }
+
         return (
             <div>
                 <section id="contact">
@@ -350,6 +380,7 @@ class Add extends React.Component {
                         <div>
                             <div className="section-content">
                                 <h4 className="section-header">
+                                    <p><b> Dalyvio anketa</b></p>
                                     <p>Saint-Gobain džiaugiasi statydami ne tik namus, bet ir kasdien tvirtėjantį ryšį su savo klientais bei partneriais. Į šią kasdien tobulinamą konstrukciją sudėję geriausius save, kviečiame jus – mūsų rimtus, pašėlusius, kūrybingus ar svajojančius draugus – užpildyti <b>Saint-Gobain MORE</b> Joninių festivalio dalyvio anketą</p>
                                     <p>Užpildžius anketą, registracija galioja vienam – ją užpildžiusiam – asmeniui.</p>
                                 </h4>
