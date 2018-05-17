@@ -55,8 +55,7 @@ class Add extends React.Component {
                         [
                             { title: "Dalyvauti jachtų regatoje", index: "1", checked: false },
                             { title: "Plaukioti barža", index: "2", checked: false },
-                            { title: "Stebėti išvardintas pramogas ar užsiimti kitomis veiklomis", index: "3", checked: false },
-                            { title: "Nueiti į pasimatymą su Aurimu", index: "4", checked: false }
+                            { title: "Stebėti išvardintas pramogas ar užsiimti kitomis veiklomis", index: "3", checked: false }
                         ],
                     isValid: true, message: ''
                 },
