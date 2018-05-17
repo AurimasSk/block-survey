@@ -36,6 +36,7 @@ class Add extends React.Component {
             "Sutinku",
             "Nesutinku"
         ];
+        this.counterId = "123456789";
         this.state = {
             showSuccessScreen: false,
             exactPersonExists: false,
@@ -49,6 +50,16 @@ class Add extends React.Component {
                 transport: { value: '', isValid: true, message: '' },
                 sleeping: { value: '', isValid: true, message: '' },
                 arriveTime: { value: '', isValid: true, message: '' },
+                activities: {
+                    value:
+                        [
+                            { title: "Dalyvauti jachtų regatoje", index: "1", checked: false },
+                            { title: "Plaukioti barža", index: "2", checked: false },
+                            { title: "Stebėti išvardintas pramogas ar užsiimti kitomis veiklomis", index: "3", checked: false },
+                            { title: "Nueiti į pasimatymą su Aurimu", index: "4", checked: false }
+                        ],
+                    isValid: true, message: ''
+                },
                 feeding: { value: '', isValid: true, message: '' },
                 personDataAgreement: { value: '', isValid: true, message: '' },
                 personMediaAgreement: { value: '', isValid: true, message: '' },
@@ -60,18 +71,18 @@ class Add extends React.Component {
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
         this.handleRadioChange = this.handleRadioChange.bind(this);
         this.handleTimeChange = this.handleTimeChange.bind(this);
-        this.insertNewAnswers = this.insertNewAnswers.bind(this);
+        // this.insertNewAnswers = this.insertNewAnswers.bind(this);
         this.validateInputs = this.validateInputs.bind(this);
         this.resetValidationStates = this.resetValidationStates.bind(this);
         this.handleCheckboxGroupChanged = this.handleCheckboxGroupChanged.bind(this);
         this.handleRadioChangeWithValidationRule = this.handleRadioChangeWithValidationRule.bind(this);
         this.checkExactPersonExistence = this.checkExactPersonExistence.bind(this);
         this.getCounterValue = this.getCounterValue.bind(this);
+        this.concatActivitiesValues = this.concatActivitiesValues.bind(this);
     }
 
     componentDidMount() {
-        console.log("Calling get value");
-        // this.getCounterValue(this);
+        this.getCounterValue(this);
     }
 
     onSave(e) {
@@ -135,6 +146,17 @@ class Add extends React.Component {
             this.setState(state);
             inputValid = false;
         }
+        // var activityOptionSelected = false;
+        // state.inputData.activities.value.map(activityChoice => {
+        //     if (activityChoice.checked)
+        //         activityOptionSelected = true;
+        // });
+        // if (!activityOptionSelected) {
+        //     state.inputData.activities.isValid = false;
+        //     state.inputData.activities.message = 'Prašome pasirinkti maitinimo poreikius';
+        //     this.setState(state);
+        //     inputValid = false;
+        // }
         if (state.inputData.sleeping.value.length == 0) {
             state.inputData.sleeping.isValid = false;
             state.inputData.sleeping.message = 'Prašome pasirinkti nakvynės variantą';
@@ -194,44 +216,53 @@ class Add extends React.Component {
     }
 
     getCounterValue(e) {
-        console.log("Inside counter value method");
-        axios.get('/getCounterValue?counterId=1')
+        axios.get('/getCounterValue?counterId=' + e.counterId)
             .then(function (response) {
-                console.log("Counter value: ", response.data[0].counterValue);
                 var state = e.state;
                 state.counterValue = response.data[0].counterValue;
-
                 e.setState(state);
             });
     }
 
-    insertNewAnswers(e) {
-        axios.post('/insert',
-            querystring.stringify({
-                firstName: e.state.inputData.firstName.value,
-                lastName: e.state.inputData.lastName.value,
-                workplace: e.state.inputData.workplace.value,
-                email: e.state.inputData.email.value,
-                telephone: e.state.inputData.telephone.value,
-                transport: e.state.inputData.transport.value,
-                sleeping: e.state.inputData.sleeping.value,
-                arriveTime: e.state.inputData.arriveTime.value,
-                feeding: e.state.inputData.feeding.value,
-                personDataAgreement: e.state.inputData.personDataAgreement.value,
-                personMediaAgreement: e.state.inputData.personMediaAgreement.value,
-                safetyAccepted: e.state.inputData.safetyAccepted.value
-            }), {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                }
-            }).then(function (response) {
-                if (response && response.status != 200) {
-                    alert("Įvyko klaida. Prašome pakartoti.");
-                }
-                else {
-                    e.setState({ showSuccessScreen: true });
-                }
-            });
+    // insertNewAnswers(e) {
+    //     axios.post('/insert',
+    //         querystring.stringify({
+    //             firstName: e.state.inputData.firstName.value,
+    //             lastName: e.state.inputData.lastName.value,
+    //             workplace: e.state.inputData.workplace.value,
+    //             email: e.state.inputData.email.value,
+    //             telephone: e.state.inputData.telephone.value,
+    //             transport: e.state.inputData.transport.value,
+    //             sleeping: e.state.inputData.sleeping.value,
+    //             arriveTime: e.state.inputData.arriveTime.value,
+    //             activities: this.concatActivitiesValues(e.state.inputData.activities.value),
+    //             feeding: e.state.inputData.feeding.value,
+    //             personDataAgreement: e.state.inputData.personDataAgreement.value,
+    //             personMediaAgreement: e.state.inputData.personMediaAgreement.value,
+    //             safetyAccepted: e.state.inputData.safetyAccepted.value
+    //         }), {
+    //             headers: {
+    //                 "Content-Type": "application/x-www-form-urlencoded"
+    //             }
+    //         }).then(function (response) {
+    //             if (response && response.status != 200) {
+    //                 alert("Įvyko klaida. Prašome pakartoti.");
+    //             }
+    //             else {
+    //                 e.setState({ showSuccessScreen: true });
+    //             }
+    //         });
+    // }
+
+    concatActivitiesValues(activitiesValues) {
+        var concatenatedValue = "";
+        activitiesValues.map(value => {
+            if (value.checked) {
+                concatenatedValue = concatenatedValue + value.title + "; "
+            }
+        });
+
+        return concatenatedValue;
     }
 
     checkExactPersonExistence(e) {
@@ -240,11 +271,8 @@ class Add extends React.Component {
         var email = e.state.inputData.email.value;
         axios.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + "&email=" + email)
             .then(function (response) {
-                console.log("Response: ", response);
                 e.setState({ exactPersonExists: response.data.length > 0 });
                 if (!e.state.exactPersonExists) {
-                    console.log("Length: ", response.data.length, "is: ", e.state.exactPersonExists);
-
                     axios.post('/insert',
                         querystring.stringify({
                             firstName: e.state.inputData.firstName.value,
@@ -255,6 +283,7 @@ class Add extends React.Component {
                             transport: e.state.inputData.transport.value,
                             sleeping: e.state.inputData.sleeping.value,
                             arriveTime: e.state.inputData.arriveTime.value,
+                            activities: e.concatActivitiesValues(e.state.inputData.activities.value),
                             feeding: e.state.inputData.feeding.value,
                             personDataAgreement: e.state.inputData.personDataAgreement.value,
                             personMediaAgreement: e.state.inputData.personMediaAgreement.value,
@@ -268,14 +297,16 @@ class Add extends React.Component {
                                 alert("Įvyko klaida. Prašome pakartoti.");
                             }
                             else {
-
-                                // axios.get('/updateCounter?counterId=1')
-                                //     .then(function (response) {
-                                //         console.log("Counter value: ", response);
-                                //         e.setState({ showSuccessScreen: true });
-                                //     });
-
-                                e.setState({ showSuccessScreen: true });
+                                if (e.state.inputData.sleeping.value == "Pasiliksiu iki kito ryto kempingo namelyje (vietų skaičius ribotas!)") {
+                                    var nextCounterValue = e.state.counterValue + 1;
+                                    axios.get('/updateCounter?counterId=' + e.counterId + '&nextCounterValue=' + nextCounterValue)
+                                        .then(function (response) {
+                                            e.setState({ showSuccessScreen: true });
+                                        });
+                                }
+                                else {
+                                    e.setState({ showSuccessScreen: true });
+                                }
                             }
                         });
                 }
@@ -340,9 +371,9 @@ class Add extends React.Component {
     handleCheckboxGroupChanged(event) {
         const index = event.target.name;
         let inputData = this.state.inputData;
-        inputData.feeding.value.map(feedingOption => {
-            if (feedingOption.index == index)
-                feedingOption.checked = event.target.checked;
+        inputData.activities.value.map(activitiesOption => {
+            if (activitiesOption.index == index)
+                activitiesOption.checked = event.target.checked;
         })
 
         return this.setState({ inputData: inputData });
@@ -361,16 +392,16 @@ class Add extends React.Component {
         var transportGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.transport.isValid });
         var arriveTimeGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.arriveTime.isValid });
         var sleepingGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.sleeping.isValid });
+        var activitiesGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.activities.isValid });
         var feedingGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.feeding.isValid });
         var personDataAgreementGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.personDataAgreement.isValid });
         var personMediaAgreementGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.personMediaAgreement.isValid });
         var safetyAcceptedGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.safetyAccepted.isValid });
         var exactPersonExistsGroupClass = classNames('form-group', { 'has-error': !this.state.exactPersonExists });
 
-        // console.log("On render: ", this.state.counterValue);
-        // if (this.state.counterValue > -1 && this.allSleepingOptions.length == 3) {
-        //     this.allSleepingOptions.splice(0, 1);
-        // }
+        if (this.state.counterValue > 5 && this.allSleepingOptions.length == 3) {
+            this.allSleepingOptions.splice(0, 1);
+        }
 
         return (
             <div>
@@ -439,6 +470,23 @@ class Add extends React.Component {
                                                 >
                                                 </ReactRadioButtonGroup>
                                                 <span className="help-block">{this.state.inputData.arriveTime.message}</span>
+                                            </div>
+                                            <div className={activitiesGroupClass}>
+                                                <label>Planuoju užsiimti vandens veiklomis, vyksiančiomis nuo 11 val. ryto:</label>
+                                                <div>
+                                                    {this.state.inputData.activities.value.map(activitiesOption =>
+                                                        <div key={activitiesOption.index}>
+                                                            <input className="form-check-input" type="checkbox"
+                                                                name={activitiesOption.index}
+                                                                id={activitiesOption.index}
+                                                                checked={activitiesOption.checked}
+                                                                onChange={this.handleCheckboxGroupChanged}
+                                                            />
+                                                            <label className="label-margin" htmlFor={activitiesOption.index}>{activitiesOption.title}</label>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <span className="help-block">{this.state.inputData.activities.message}</span>
                                             </div>
                                             <div className={sleepingGroupClass}>
                                                 <label htmlFor="sleeping">Nakvynė</label>
@@ -513,6 +561,7 @@ class Add extends React.Component {
                                                 <span className="help-block">{this.state.inputData.safetyAccepted.message}</span>
                                             </div>
                                             <div className="form-group">
+                                                <br />
                                                 <label>
                                                     Iškilus daugiau klausimų maloniai kviečiame kreiptis į Saint-Gobain įmonės atstovą Kęstutį Puišį, +370 674 39910
                                             </label>

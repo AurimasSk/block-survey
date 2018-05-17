@@ -20,6 +20,7 @@ router.route('/insert')
         answers.transport = req.body.transport;
         answers.sleeping = req.body.sleeping;
         answers.arriveTime = req.body.arriveTime;
+        answers.activities = req.body.activities;
         answers.feeding = req.body.feeding;
         answers.personDataAgreement = req.body.personDataAgreement;
         answers.personMediaAgreement = req.body.personMediaAgreement;
@@ -44,11 +45,9 @@ router.get('/getExactPerson', function (req, res) {
 });
 
 router.get('/getCounterValue', function (req, res) {
-    console.log("Cia");
     var counterId = req.query.counterId;
-    Answers.find({ counterId: counterId },
+    Counter.find({ counterId: counterId },
         function (err, counter) {
-            console.log("Res: ", counter);
             if (err)
                 res.send(err);
             res.json(counter);
@@ -58,15 +57,11 @@ router.get('/getCounterValue', function (req, res) {
 router.get('/updateCounter', function (req, res) {
     var counterId = req.query.counterId;
     var nextCounterValue = req.query.nextCounterValue;
-    const doc = {
-        counterId: counterId,
-        counterValue: nextCounterValue
-    };
-    Answers.update({ counterId: counterId }, doc,
+    Counter.update({ counterId: counterId }, { counterId: counterId, counterValue: nextCounterValue }, {upsert: true},
         function (err, counter) {
             if (err)
                 res.send(err);
-            res.json("Updated!");
+            res.json(counter);
         });
 });
 module.exports = router;
