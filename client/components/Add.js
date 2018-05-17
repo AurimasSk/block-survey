@@ -24,8 +24,8 @@ class Add extends React.Component {
             "Planuoju išvykti pasibaigus renginio programai"
         ];
         this.arriveOptions = [
-            "09:30 – 10:30 val.",
-            "10:30 – 11:30 val."
+            "09:30 – 10:30 val",
+            "10:30 – 11:30 val"
         ];
         this.allFeedingOptions = [
             "Esu vegetaras",
