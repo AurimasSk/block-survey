@@ -40979,7 +40979,7 @@ var Add = function (_React$Component) {
                 sleeping: { value: '', isValid: true, message: '' },
                 arriveTime: { value: '', isValid: true, message: '' },
                 activities: {
-                    value: [{ title: "Dalyvauti jachtų regatoje", index: "1", checked: false }, { title: "Plaukioti barža", index: "2", checked: false }, { title: "Stebėti išvardintas pramogas ar užsiimti kitomis veiklomis", index: "3", checked: false }, { title: "Nueiti į pasimatymą su Aurimu", index: "4", checked: false }],
+                    value: [{ title: "Dalyvauti jachtų regatoje", index: "1", checked: false }, { title: "Plaukioti barža", index: "2", checked: false }, { title: "Stebėti išvardintas pramogas ar užsiimti kitomis veiklomis", index: "3", checked: false }],
                     isValid: true, message: ''
                 },
                 feeding: { value: '', isValid: true, message: '' },
@@ -41190,7 +41190,7 @@ var Add = function (_React$Component) {
                     concatenatedValue = concatenatedValue + value.title + "; ";
                 }
             });
-            console.log("return activities:", concatenatedValue);
+
             return concatenatedValue;
         }
     }, {
@@ -41200,7 +41200,6 @@ var Add = function (_React$Component) {
             var lastName = e.state.inputData.lastName.value;
             var email = e.state.inputData.email.value;
             _axios2.default.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + "&email=" + email).then(function (response) {
-                console.log("Response: ", response);
                 e.setState({ exactPersonExists: response.data.length > 0 });
                 if (!e.state.exactPersonExists) {
                     _axios2.default.post('/insert', querystring.stringify({
