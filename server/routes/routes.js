@@ -24,7 +24,6 @@ router.route('/insert')
         answers.feeding = req.body.feeding;
         answers.personDataAgreement = req.body.personDataAgreement;
         answers.personMediaAgreement = req.body.personMediaAgreement;
-        answers.safetyAccepted = req.body.safetyAccepted;
 
         answers.save(function (err) {
             if (err)
@@ -35,8 +34,8 @@ router.route('/insert')
 router.get('/getExactPerson', function (req, res) {
     var firstName = req.query.firstName;
     var lastName = req.query.lastName;
-    var email = req.query.email;
-    Answers.find({ $and: [{ firstName: firstName }, { lastName: lastName }, { email: email }] },
+    var telephone = req.query.telephone;
+    Answers.find({ $and: [{ firstName: firstName }, { lastName: lastName }, { telephone: telephone }] },
         function (err, answers) {
             if (err)
                 res.send(err);

@@ -40979,13 +40979,12 @@ var Add = function (_React$Component) {
                 sleeping: { value: '', isValid: true, message: '' },
                 arriveTime: { value: '', isValid: true, message: '' },
                 activities: {
-                    value: [{ title: "Dalyvauti jachtų regatoje", index: "1", checked: false }, { title: "Plaukioti barža", index: "2", checked: false }, { title: "Stebėti išvardintas pramogas ar užsiimti kitomis veiklomis", index: "3", checked: false }],
+                    value: [{ title: "Sportinėje jachtų regatoje (privaloma registracija renginio vietoje iki 11:00 val. ryto)", index: "1", checked: false }, { title: "Ramiai paplaukioti po Galvės ežerą (11:00 – 15:00 val.)", index: "2", checked: false }],
                     isValid: true, message: ''
                 },
                 feeding: { value: '', isValid: true, message: '' },
                 personDataAgreement: { value: '', isValid: true, message: '' },
-                personMediaAgreement: { value: '', isValid: true, message: '' },
-                safetyAccepted: { value: false, isValid: true, message: '' }
+                personMediaAgreement: { value: '', isValid: true, message: '' }
             }
         };
         _this.onSave = _this.onSave.bind(_this);
@@ -41119,12 +41118,6 @@ var Add = function (_React$Component) {
                 this.setState(state);
                 inputValid = false;
             }
-            if (!state.inputData.safetyAccepted.value) {
-                state.inputData.safetyAccepted.isValid = false;
-                state.inputData.safetyAccepted.message = 'Prašome sutikti su saugumo reikalavimais';
-                this.setState(state);
-                inputValid = false;
-            }
 
             return inputValid;
         }
@@ -41198,8 +41191,8 @@ var Add = function (_React$Component) {
         value: function checkExactPersonExistence(e) {
             var firstName = e.state.inputData.firstName.value;
             var lastName = e.state.inputData.lastName.value;
-            var email = e.state.inputData.email.value;
-            _axios2.default.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + "&email=" + email).then(function (response) {
+            var telephone = e.state.inputData.telephone.value;
+            _axios2.default.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + "&telephone=" + telephone).then(function (response) {
                 e.setState({ exactPersonExists: response.data.length > 0 });
                 if (!e.state.exactPersonExists) {
                     _axios2.default.post('/insert', querystring.stringify({
@@ -41214,8 +41207,7 @@ var Add = function (_React$Component) {
                         activities: e.concatActivitiesValues(e.state.inputData.activities.value),
                         feeding: e.state.inputData.feeding.value,
                         personDataAgreement: e.state.inputData.personDataAgreement.value,
-                        personMediaAgreement: e.state.inputData.personMediaAgreement.value,
-                        safetyAccepted: e.state.inputData.safetyAccepted.value
+                        personMediaAgreement: e.state.inputData.personMediaAgreement.value
                     }), {
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
@@ -41327,7 +41319,6 @@ var Add = function (_React$Component) {
             var feedingGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.feeding.isValid });
             var personDataAgreementGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.personDataAgreement.isValid });
             var personMediaAgreementGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.personMediaAgreement.isValid });
-            var safetyAcceptedGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.safetyAccepted.isValid });
             var exactPersonExistsGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.exactPersonExists });
 
             if (this.state.counterValue > 5 && this.allSleepingOptions.length == 3) {
@@ -41533,7 +41524,13 @@ var Add = function (_React$Component) {
                                             _react2.default.createElement(
                                                 'label',
                                                 null,
-                                                'Planuoju u\u017Esiimti vandens veiklomis, vyksian\u010Diomis nuo 11 val. ryto:'
+                                                'Renginio dien\u0105 ',
+                                                _react2.default.createElement(
+                                                    'b',
+                                                    null,
+                                                    'nuo 11:00 val.'
+                                                ),
+                                                ' nor\u0117siu dalyvauti \u0161iose vandens veiklose'
                                             ),
                                             _react2.default.createElement(
                                                 'div',
@@ -41554,7 +41551,12 @@ var Add = function (_React$Component) {
                                                             activitiesOption.title
                                                         )
                                                     );
-                                                })
+                                                }),
+                                                _react2.default.createElement(
+                                                    'label',
+                                                    null,
+                                                    ' Informuojame, kad nuo 11:00 val. sve\u010Diai tur\u0117s galimyb\u0119 u\u017Esiimti kitomis veiklomis \u2013 dalyvauti sportiniuose turnyruose, menin\u0117se dirbtuv\u0117se, kt. '
+                                                )
                                             ),
                                             _react2.default.createElement(
                                                 'span',
@@ -41708,26 +41710,6 @@ var Add = function (_React$Component) {
                                                     { className: 'help-block' },
                                                     this.state.inputData.personMediaAgreement.message
                                                 )
-                                            )
-                                        ),
-                                        _react2.default.createElement(
-                                            'div',
-                                            { className: safetyAcceptedGroupClass },
-                                            _react2.default.createElement('input', { className: 'form-check-input', type: 'checkbox',
-                                                name: 'safetyAccepted',
-                                                id: 'safetyAccepted',
-                                                checked: this.state.safetyAccepted,
-                                                onChange: this.handleCheckboxChange
-                                            }),
-                                            _react2.default.createElement(
-                                                'label',
-                                                { className: 'label-margin', htmlFor: 'safetyAccepted' },
-                                                'U\u017E savo saugum\u0105 renginyje esu atsakingas pats'
-                                            ),
-                                            _react2.default.createElement(
-                                                'span',
-                                                { className: 'help-block' },
-                                                this.state.inputData.safetyAccepted.message
                                             )
                                         ),
                                         _react2.default.createElement(

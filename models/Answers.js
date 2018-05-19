@@ -13,8 +13,7 @@ var expenseSchema = new Schema({
     activities: String,
     feeding: String,
     personDataAgreement: String,
-    personMediaAgreement: String,
-    safetyAccepted: Boolean
+    personMediaAgreement: String
 });
 
 module.exports = mongoose.model('Expense', expenseSchema);

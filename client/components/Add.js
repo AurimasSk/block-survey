@@ -53,16 +53,14 @@ class Add extends React.Component {
                 activities: {
                     value:
                         [
-                            { title: "Dalyvauti jachtų regatoje", index: "1", checked: false },
-                            { title: "Plaukioti barža", index: "2", checked: false },
-                            { title: "Stebėti išvardintas pramogas ar užsiimti kitomis veiklomis", index: "3", checked: false }
+                            { title: "Sportinėje jachtų regatoje (privaloma registracija renginio vietoje iki 11:00 val. ryto)", index: "1", checked: false },
+                            { title: "Ramiai paplaukioti po Galvės ežerą (11:00 – 15:00 val.)", index: "2", checked: false }
                         ],
                     isValid: true, message: ''
                 },
                 feeding: { value: '', isValid: true, message: '' },
                 personDataAgreement: { value: '', isValid: true, message: '' },
-                personMediaAgreement: { value: '', isValid: true, message: '' },
-                safetyAccepted: { value: false, isValid: true, message: '' }
+                personMediaAgreement: { value: '', isValid: true, message: '' }
             }
         }
         this.onSave = this.onSave.bind(this);
@@ -192,12 +190,6 @@ class Add extends React.Component {
             this.setState(state);
             inputValid = false;
         }
-        if (!state.inputData.safetyAccepted.value) {
-            state.inputData.safetyAccepted.isValid = false;
-            state.inputData.safetyAccepted.message = 'Prašome sutikti su saugumo reikalavimais';
-            this.setState(state);
-            inputValid = false;
-        }
 
         return inputValid;
     }
@@ -267,8 +259,8 @@ class Add extends React.Component {
     checkExactPersonExistence(e) {
         var firstName = e.state.inputData.firstName.value;
         var lastName = e.state.inputData.lastName.value;
-        var email = e.state.inputData.email.value;
-        axios.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + "&email=" + email)
+        var telephone = e.state.inputData.telephone.value;
+        axios.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + "&telephone=" + telephone)
             .then(function (response) {
                 e.setState({ exactPersonExists: response.data.length > 0 });
                 if (!e.state.exactPersonExists) {
@@ -285,8 +277,7 @@ class Add extends React.Component {
                             activities: e.concatActivitiesValues(e.state.inputData.activities.value),
                             feeding: e.state.inputData.feeding.value,
                             personDataAgreement: e.state.inputData.personDataAgreement.value,
-                            personMediaAgreement: e.state.inputData.personMediaAgreement.value,
-                            safetyAccepted: e.state.inputData.safetyAccepted.value
+                            personMediaAgreement: e.state.inputData.personMediaAgreement.value
                         }), {
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
@@ -395,7 +386,6 @@ class Add extends React.Component {
         var feedingGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.feeding.isValid });
         var personDataAgreementGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.personDataAgreement.isValid });
         var personMediaAgreementGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.personMediaAgreement.isValid });
-        var safetyAcceptedGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.safetyAccepted.isValid });
         var exactPersonExistsGroupClass = classNames('form-group', { 'has-error': !this.state.exactPersonExists });
 
         if (this.state.counterValue > 5 && this.allSleepingOptions.length == 3) {
@@ -471,7 +461,7 @@ class Add extends React.Component {
                                                 <span className="help-block">{this.state.inputData.arriveTime.message}</span>
                                             </div>
                                             <div className={activitiesGroupClass}>
-                                                <label>Planuoju užsiimti vandens veiklomis, vyksiančiomis nuo 11 val. ryto:</label>
+                                            <label>Renginio dieną <b>nuo 11:00 val.</b> norėsiu dalyvauti šiose vandens veiklose</label>
                                                 <div>
                                                     {this.state.inputData.activities.value.map(activitiesOption =>
                                                         <div key={activitiesOption.index}>
@@ -483,7 +473,8 @@ class Add extends React.Component {
                                                             />
                                                             <label className="label-margin" htmlFor={activitiesOption.index}>{activitiesOption.title}</label>
                                                         </div>
-                                                    )}
+                                                )}
+                                                <label> Informuojame, kad nuo 11:00 val. svečiai turės galimybę užsiimti kitomis veiklomis – dalyvauti sportiniuose turnyruose, meninėse dirbtuvėse, kt. </label>
                                                 </div>
                                                 <span className="help-block">{this.state.inputData.activities.message}</span>
                                             </div>
@@ -548,16 +539,6 @@ class Add extends React.Component {
                                                     />
                                                     <span className="help-block">{this.state.inputData.personMediaAgreement.message}</span>
                                                 </div>
-                                            </div>
-                                            <div className={safetyAcceptedGroupClass}>
-                                                <input className="form-check-input" type="checkbox"
-                                                    name="safetyAccepted"
-                                                    id="safetyAccepted"
-                                                    checked={this.state.safetyAccepted}
-                                                    onChange={this.handleCheckboxChange}
-                                                />
-                                                <label className="label-margin" htmlFor="safetyAccepted">Už savo saugumą renginyje esu atsakingas pats</label>
-                                                <span className="help-block">{this.state.inputData.safetyAccepted.message}</span>
                                             </div>
                                             <div className="form-group">
                                                 <br />

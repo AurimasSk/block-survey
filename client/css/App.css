@@ -4,8 +4,18 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background: #2b191d; /* fallback for old browsers */
-    color : #fff;
+    /* background: #2b191d; */
+    background-image: url("background.jpg");
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color : black;
+}
+
+label, h4 {
+  font-size: 14px !important;
 }
 
 .centered {
@@ -91,6 +101,7 @@ input.ledas {
   height: 200px; 
   overflow: auto; 
   padding: 10px;
+  font-size: 12px;
 }
 
 .checkboxNewLine {
