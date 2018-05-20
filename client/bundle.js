@@ -41191,8 +41191,10 @@ var Add = function (_React$Component) {
         value: function checkExactPersonExistence(e) {
             var firstName = e.state.inputData.firstName.value;
             var lastName = e.state.inputData.lastName.value;
-            var telephone = e.state.inputData.telephone.value;
-            _axios2.default.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + "&telephone=" + telephone).then(function (response) {
+            var telephone = e.state.inputData.telephone.value.replace('+', '%2B');
+            console.log("Te;1:", telephone);
+            _axios2.default.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + '&telephone=' + telephone).then(function (response) {
+                console.log(response);
                 e.setState({ exactPersonExists: response.data.length > 0 });
                 if (!e.state.exactPersonExists) {
                     _axios2.default.post('/insert', querystring.stringify({

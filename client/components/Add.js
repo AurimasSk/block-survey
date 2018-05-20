@@ -259,9 +259,11 @@ class Add extends React.Component {
     checkExactPersonExistence(e) {
         var firstName = e.state.inputData.firstName.value;
         var lastName = e.state.inputData.lastName.value;
-        var telephone = e.state.inputData.telephone.value;
-        axios.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + "&telephone=" + telephone)
+        var telephone = e.state.inputData.telephone.value.replace('+', '%2B');
+        console.log("Te;1:", telephone);
+        axios.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + '&telephone=' + telephone)
             .then(function (response) {
+                console.log(response);
                 e.setState({ exactPersonExists: response.data.length > 0 });
                 if (!e.state.exactPersonExists) {
                     axios.post('/insert',
@@ -548,7 +550,7 @@ class Add extends React.Component {
                                             </div>
                                             <div className={exactPersonExistsGroupClass}>
                                                 {this.state.exactPersonExists &&
-                                                    <span className="help-block">Asmuo su tokiu vardu, pavarde ir el. paštu jau yra užregistruotas</span>
+                                                    <span className="help-block">Asmuo su tokiu vardu, pavarde ir telefono numeriu jau yra užregistruotas</span>
                                                 }
                                             </div>
                                             <button className="btn btn-lg btn-primary btn-block" type="submit">Išsaugoti</button>
