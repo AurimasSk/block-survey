@@ -35,7 +35,6 @@ router.get('/getExactPerson', function (req, res) {
     var firstName = req.query.firstName;
     var lastName = req.query.lastName;
     var telephone = req.query.telephone.replace('%2B','+');
-    console.log("Tel: ", req);
     Answers.find({ $and: [{ firstName: firstName }, { lastName: lastName }, { telephone: telephone }] },
         function (err, answers) {
             if (err)

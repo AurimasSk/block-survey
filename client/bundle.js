@@ -41353,28 +41353,34 @@ var Add = function (_React$Component) {
                                 { className: 'section-header' },
                                 _react2.default.createElement(
                                     'p',
-                                    null,
+                                    { className: 'mainHeader' },
                                     _react2.default.createElement(
                                         'b',
                                         null,
-                                        ' Dalyvio anketa'
+                                        'Asmenin\u0117 dalyvio anketa'
                                     )
                                 ),
                                 _react2.default.createElement(
                                     'p',
                                     null,
-                                    'Saint-Gobain d\u017Eiaugiasi statydami ne tik namus, bet ir kasdien tvirt\u0117jant\u012F ry\u0161\u012F su savo klientais bei partneriais. \u012E \u0161i\u0105 kasdien tobulinam\u0105 konstrukcij\u0105 sud\u0117j\u0119 geriausius save, kvie\u010Diame jus \u2013 m\u016Bs\u0173 rimtus, pa\u0161\u0117lusius, k\u016Brybingus ar svajojan\u010Dius draugus \u2013 u\u017Epildyti ',
+                                    'U\u017Epild\u017Eius anket\u0105, registracija galioja ',
                                     _react2.default.createElement(
                                         'b',
                                         null,
-                                        'Saint-Gobain MORE'
+                                        'vienam'
                                     ),
-                                    ' Jonini\u0173 festivalio dalyvio anket\u0105'
+                                    ' \u2013 j\u0105 u\u017Epild\u017Eiusiam \u2013 ',
+                                    _react2.default.createElement(
+                                        'b',
+                                        null,
+                                        'asmeniui'
+                                    ),
+                                    '.'
                                 ),
                                 _react2.default.createElement(
                                     'p',
-                                    null,
-                                    'U\u017Epild\u017Eius anket\u0105, registracija galioja vienam \u2013 j\u0105 u\u017Epild\u017Eiusiam \u2013 asmeniui.'
+                                    { className: 'redText' },
+                                    'Registracija vyksta iki gegu\u017E\u0117s 31 d. 23:59 val.!'
                                 )
                             )
                         ),
@@ -41557,7 +41563,12 @@ var Add = function (_React$Component) {
                                                 _react2.default.createElement(
                                                     'label',
                                                     null,
-                                                    ' Informuojame, kad nuo 11:00 val. sve\u010Diai tur\u0117s galimyb\u0119 u\u017Esiimti kitomis veiklomis \u2013 dalyvauti sportiniuose turnyruose, menin\u0117se dirbtuv\u0117se, kt. '
+                                                    ' Informuojame, kad nuo 11:00 val. sve\u010Diai tur\u0117s galimyb\u0119 u\u017Esiimti kitomis veiklomis \u2013 '
+                                                ),
+                                                _react2.default.createElement(
+                                                    'label',
+                                                    null,
+                                                    'dalyvauti sportiniuose turnyruose, menin\u0117se dirbtuv\u0117se, kt. '
                                                 )
                                             ),
                                             _react2.default.createElement(
@@ -41721,7 +41732,13 @@ var Add = function (_React$Component) {
                                             _react2.default.createElement(
                                                 'label',
                                                 null,
-                                                'I\u0161kilus daugiau klausim\u0173 maloniai kvie\u010Diame kreiptis \u012F Saint-Gobain \u012Fmon\u0117s atstov\u0105 K\u0119stut\u012F Pui\u0161\u012F, +370 674 39910'
+                                                'I\u0161kilus daugiau klausim\u0173 maloniai kvie\u010Diame kreiptis \u012F ',
+                                                _react2.default.createElement(
+                                                    'b',
+                                                    null,
+                                                    'Saint-Gobain'
+                                                ),
+                                                ' \u012Fmon\u0117s atstov\u0105 K\u0119stut\u012F Pui\u0161\u012F, +370 674 39910'
                                             )
                                         ),
                                         _react2.default.createElement(
@@ -41730,19 +41747,20 @@ var Add = function (_React$Component) {
                                             this.state.exactPersonExists && _react2.default.createElement(
                                                 'span',
                                                 { className: 'help-block' },
-                                                'Asmuo su tokiu vardu, pavarde ir el. pa\u0161tu jau yra u\u017Eregistruotas'
+                                                'Asmuo su tokiu vardu, pavarde ir telefono numeriu jau yra u\u017Eregistruotas'
                                             )
                                         ),
                                         _react2.default.createElement(
                                             'button',
-                                            { className: 'btn btn-lg btn-primary btn-block', type: 'submit' },
+                                            { className: 'btn btn-lg btn-primary btn-block blackText', type: 'submit' },
                                             'I\u0161saugoti'
                                         ),
                                         _react2.default.createElement('br', null)
                                     )
                                 )
                             )
-                        )
+                        ),
+                        _react2.default.createElement('img', { className: 'logo', src: '../css/logo.png' })
                     )
                 )
             );

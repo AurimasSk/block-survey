@@ -14,7 +14,7 @@ app.set('views', path.join(__dirname, '../client'));
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
-mongoose.connect('mongodb://block_user:blockquizpass@ds255319.mlab.com:55319/aurimas_sk');
+mongoose.connect('mongodb://sgmore:sgmorepassword01@ds231150-a0.mlab.com:31150/sgmore');
 app.use('/', router);
 var port = 8000
 app.listen(process.env.PORT || 5000, function () {

@@ -55,9 +55,9 @@ label, h4 {
   min-width:830px; 
 }
 
-.contact-section{
+/* .contact-section{
   padding-top: 40px;
-}
+} */
 .contact-section .col-md-6{
   width: 50%;
 }
@@ -97,8 +97,8 @@ input.ledas {
 
 .areaClass {
   border-radius: 10px 0px 0px 10px;
-  border: 1px solid #e5e5e5; 
-  height: 200px; 
+  border: 1px solid black;
+  height: 210px; 
   overflow: auto; 
   padding: 10px;
   font-size: 12px;
@@ -106,4 +106,21 @@ input.ledas {
 
 .checkboxNewLine {
   margin-left: 23px;
+}
+
+.redText {
+  color: red;
+}
+
+.blackText {
+  color: black;
+}
+
+.logo {
+  height: 100%;
+  width: 100%;
+} 
+
+.mainHeader {
+  font-size: 16px !important;
 }

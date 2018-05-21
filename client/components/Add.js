@@ -260,10 +260,8 @@ class Add extends React.Component {
         var firstName = e.state.inputData.firstName.value;
         var lastName = e.state.inputData.lastName.value;
         var telephone = e.state.inputData.telephone.value.replace('+', '%2B');
-        console.log("Te;1:", telephone);
         axios.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + '&telephone=' + telephone)
             .then(function (response) {
-                console.log(response);
                 e.setState({ exactPersonExists: response.data.length > 0 });
                 if (!e.state.exactPersonExists) {
                     axios.post('/insert',
@@ -397,14 +395,16 @@ class Add extends React.Component {
         return (
             <div>
                 <section id="contact">
-                    {this.state.showSuccessScreen && <div className="centered"><h1>Ačiū, jūsų duomenys sėkmingai išsaugoti!</h1></div>}
+                    {this.state.showSuccessScreen &&
+                        <div className="centered"><h1>Ačiū, jūsų duomenys sėkmingai išsaugoti!</h1></div>
+                    }
                     {!this.state.showSuccessScreen &&
                         <div>
                             <div className="section-content">
                                 <h4 className="section-header">
-                                    <p><b> Dalyvio anketa</b></p>
-                                    <p>Saint-Gobain džiaugiasi statydami ne tik namus, bet ir kasdien tvirtėjantį ryšį su savo klientais bei partneriais. Į šią kasdien tobulinamą konstrukciją sudėję geriausius save, kviečiame jus – mūsų rimtus, pašėlusius, kūrybingus ar svajojančius draugus – užpildyti <b>Saint-Gobain MORE</b> Joninių festivalio dalyvio anketą</p>
-                                    <p>Užpildžius anketą, registracija galioja vienam – ją užpildžiusiam – asmeniui.</p>
+                                    <p className="mainHeader"><b>Asmeninė dalyvio anketa</b></p>
+                                    <p>Užpildžius anketą, registracija galioja <b>vienam</b> – ją užpildžiusiam – <b>asmeniui</b>.</p>
+                                    <p className="redText">Registracija vyksta iki gegužės 31 d. 23:59 val.!</p>
                                 </h4>
                             </div>
                             <div className="container contact-section">
@@ -463,7 +463,7 @@ class Add extends React.Component {
                                                 <span className="help-block">{this.state.inputData.arriveTime.message}</span>
                                             </div>
                                             <div className={activitiesGroupClass}>
-                                            <label>Renginio dieną <b>nuo 11:00 val.</b> norėsiu dalyvauti šiose vandens veiklose</label>
+                                                <label>Renginio dieną <b>nuo 11:00 val.</b> norėsiu dalyvauti šiose vandens veiklose</label>
                                                 <div>
                                                     {this.state.inputData.activities.value.map(activitiesOption =>
                                                         <div key={activitiesOption.index}>
@@ -475,8 +475,9 @@ class Add extends React.Component {
                                                             />
                                                             <label className="label-margin" htmlFor={activitiesOption.index}>{activitiesOption.title}</label>
                                                         </div>
-                                                )}
-                                                <label> Informuojame, kad nuo 11:00 val. svečiai turės galimybę užsiimti kitomis veiklomis – dalyvauti sportiniuose turnyruose, meninėse dirbtuvėse, kt. </label>
+                                                    )}
+                                                    <label> Informuojame, kad nuo 11:00 val. svečiai turės galimybę užsiimti kitomis veiklomis – </label>
+                                                    <label>dalyvauti sportiniuose turnyruose, meninėse dirbtuvėse, kt. </label>
                                                 </div>
                                                 <span className="help-block">{this.state.inputData.activities.message}</span>
                                             </div>
@@ -545,7 +546,7 @@ class Add extends React.Component {
                                             <div className="form-group">
                                                 <br />
                                                 <label>
-                                                    Iškilus daugiau klausimų maloniai kviečiame kreiptis į Saint-Gobain įmonės atstovą Kęstutį Puišį, +370 674 39910
+                                                    Iškilus daugiau klausimų maloniai kviečiame kreiptis į <b>Saint-Gobain</b> įmonės atstovą Kęstutį Puišį, +370 674 39910
                                             </label>
                                             </div>
                                             <div className={exactPersonExistsGroupClass}>
@@ -553,12 +554,13 @@ class Add extends React.Component {
                                                     <span className="help-block">Asmuo su tokiu vardu, pavarde ir telefono numeriu jau yra užregistruotas</span>
                                                 }
                                             </div>
-                                            <button className="btn btn-lg btn-primary btn-block" type="submit">Išsaugoti</button>
+                                            <button className="btn btn-lg btn-primary btn-block blackText" type="submit">Išsaugoti</button>
                                             <br />
                                         </div>
                                     </div>
                                 </form>
                             </div>
+                            <img className="logo" src="../css/logo.png" />
                         </div>
                     }
                 </section>
