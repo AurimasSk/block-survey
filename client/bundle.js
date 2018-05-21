@@ -41192,9 +41192,7 @@ var Add = function (_React$Component) {
             var firstName = e.state.inputData.firstName.value;
             var lastName = e.state.inputData.lastName.value;
             var telephone = e.state.inputData.telephone.value.replace('+', '%2B');
-            console.log("Te;1:", telephone);
             _axios2.default.get('/getExactPerson?firstName=' + firstName + '&lastName=' + lastName + '&telephone=' + telephone).then(function (response) {
-                console.log(response);
                 e.setState({ exactPersonExists: response.data.length > 0 });
                 if (!e.state.exactPersonExists) {
                     _axios2.default.post('/insert', querystring.stringify({
@@ -41323,7 +41321,7 @@ var Add = function (_React$Component) {
             var personMediaAgreementGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.personMediaAgreement.isValid });
             var exactPersonExistsGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.exactPersonExists });
 
-            if (this.state.counterValue > 5 && this.allSleepingOptions.length == 3) {
+            if (this.state.counterValue > 90 && this.allSleepingOptions.length == 3) {
                 this.allSleepingOptions.splice(0, 1);
             }
 

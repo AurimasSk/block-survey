@@ -388,7 +388,7 @@ class Add extends React.Component {
         var personMediaAgreementGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.personMediaAgreement.isValid });
         var exactPersonExistsGroupClass = classNames('form-group', { 'has-error': !this.state.exactPersonExists });
 
-        if (this.state.counterValue > 5 && this.allSleepingOptions.length == 3) {
+        if (this.state.counterValue > 90 && this.allSleepingOptions.length == 3) {
             this.allSleepingOptions.splice(0, 1);
         }
 
