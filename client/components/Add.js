@@ -59,8 +59,7 @@ class Add extends React.Component {
                     isValid: true, message: ''
                 },
                 feeding: { value: '', isValid: true, message: '' },
-                personDataAgreement: { value: '', isValid: true, message: '' },
-                personMediaAgreement: { value: '', isValid: true, message: '' }
+                personDataAgreement: { value: '', isValid: true, message: '' }
             }
         }
         this.onSave = this.onSave.bind(this);
@@ -172,24 +171,6 @@ class Add extends React.Component {
             this.setState(state);
             inputValid = false;
         }
-        if (state.inputData.personMediaAgreement.value.length == 0) {
-            state.inputData.personMediaAgreement.isValid = false;
-            state.inputData.personMediaAgreement.message = 'Prašome pasirinkti ar sutinkate';
-            this.setState(state);
-            inputValid = false;
-        }
-        if (state.inputData.personDataAgreement.value == "Nesutinku") {
-            state.inputData.personDataAgreement.isValid = false;
-            state.inputData.personDataAgreement.message = 'Deja, jums nesuteikus prieigos prie jūsų duomenų, negalėsime pasidalinti renginio dalyviams privaloma žinoti informacija.';
-            this.setState(state);
-            inputValid = false;
-        }
-        if (state.inputData.personMediaAgreement.value == "Nesutinku") {
-            state.inputData.personMediaAgreement.isValid = false;
-            state.inputData.personMediaAgreement.message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje.';
-            this.setState(state);
-            inputValid = false;
-        }
 
         return inputValid;
     }
@@ -228,8 +209,7 @@ class Add extends React.Component {
     //             arriveTime: e.state.inputData.arriveTime.value,
     //             activities: this.concatActivitiesValues(e.state.inputData.activities.value),
     //             feeding: e.state.inputData.feeding.value,
-    //             personDataAgreement: e.state.inputData.personDataAgreement.value,
-    //             personMediaAgreement: e.state.inputData.personMediaAgreement.value,
+    //             personDataAgreement: e.state.inputData.personDataAgreement.value
     //             safetyAccepted: e.state.inputData.safetyAccepted.value
     //         }), {
     //             headers: {
@@ -276,8 +256,7 @@ class Add extends React.Component {
                             arriveTime: e.state.inputData.arriveTime.value,
                             activities: e.concatActivitiesValues(e.state.inputData.activities.value),
                             feeding: e.state.inputData.feeding.value,
-                            personDataAgreement: e.state.inputData.personDataAgreement.value,
-                            personMediaAgreement: e.state.inputData.personMediaAgreement.value
+                            personDataAgreement: e.state.inputData.personDataAgreement.value
                         }), {
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
@@ -338,22 +317,14 @@ class Add extends React.Component {
         let inputData = this.state.inputData;
         inputData[fieldName].value = value;
 
-        if (fieldName == "personDataAgreement" && value == "Nesutinku") {
-            inputData[fieldName].isValid = false;
-            inputData[fieldName].message = 'Deja, jums nesuteikus prieigos prie jūsų duomenų, negalėsime pasidalinti renginio dalyviams privaloma žinoti informacija.';
-        }
-        else if (fieldName == "personDataAgreement" && value == "Sutinku") {
-            inputData[fieldName].isValid = true;
-            inputData[fieldName].message = '';
-        }
-        if (fieldName == "personMediaAgreement" && value == "Nesutinku") {
-            inputData[fieldName].isValid = false;
-            inputData[fieldName].message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje.';
-        }
-        else if (fieldName == "personMediaAgreement" && value == "Sutinku") {
-            inputData[fieldName].isValid = true;
-            inputData[fieldName].message = '';
-        }
+        // if (fieldName == "personDataAgreement" && value == "Nesutinku") {
+        //     inputData[fieldName].isValid = false;
+        //     inputData[fieldName].message = 'Deja, jums nesuteikus prieigos prie jūsų duomenų, negalėsime pasidalinti renginio dalyviams privaloma žinoti informacija.';
+        // }
+        // else if (fieldName == "personDataAgreement" && value == "Sutinku") {
+        //     inputData[fieldName].isValid = true;
+        //     inputData[fieldName].message = '';
+        // }
 
         return this.setState({ inputData: inputData });
     }
@@ -385,7 +356,6 @@ class Add extends React.Component {
         var activitiesGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.activities.isValid });
         var feedingGroupClass = classNames('form-group', 'minWidth', { 'has-error': !this.state.inputData.feeding.isValid });
         var personDataAgreementGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.personDataAgreement.isValid });
-        var personMediaAgreementGroupClass = classNames('form-group', { 'has-error': !this.state.inputData.personMediaAgreement.isValid });
         var exactPersonExistsGroupClass = classNames('form-group', { 'has-error': !this.state.exactPersonExists });
 
         if (this.state.counterValue > 90 && this.allSleepingOptions.length == 3) {
@@ -402,6 +372,7 @@ class Add extends React.Component {
                         <div>
                             <div className="section-content">
                                 <h4 className="section-header">
+                                    <p className="mainHeader"><b>SAINT-GOBAIN MORE JONINIŲ FESTIVALIS BIRŽELIO 23-24 D.</b></p>
                                     <p className="mainHeader"><b>Asmeninė dalyvio anketa</b></p>
                                     <p>Užpildžius anketą, registracija galioja <b>vienam</b> – ją užpildžiusiam – <b>asmeniui</b>.</p>
                                     <p className="redText">Registracija vyksta iki gegužės 31 d. 23:59 val.!</p>
@@ -476,7 +447,7 @@ class Add extends React.Component {
                                                             <label className="label-margin" htmlFor={activitiesOption.index}>{activitiesOption.title}</label>
                                                         </div>
                                                     )}
-                                                    <label> Informuojame, kad nuo 11:00 val. svečiai turės galimybę užsiimti kitomis veiklomis – </label>
+                                                    <label>Informuojame, kad nuo 11:00 val. svečiai turės galimybę užsiimti kitomis veiklomis – </label>
                                                     <label>dalyvauti sportiniuose turnyruose, meninėse dirbtuvėse, kt. </label>
                                                 </div>
                                                 <span className="help-block">{this.state.inputData.activities.message}</span>
@@ -512,14 +483,14 @@ class Add extends React.Component {
                                             <div className="form-group">
                                                 <label>Svarbi informacija apie Jūsų asmens duomenų tvarkymą. Sutikimas.</label>
                                                 <div className="areaClass">
-                                                    <p>Informuojame, kad UAB Saint–Gobain statybos gaminiai tvarkys Jūsų aukščiau pateiktus asmens duomenis Joninių festivalio organizavimo ir būtinos komunikacijos su Jumis tikslu. Šiuos duomenis ketiname tvarkyti Jūsų sutikimo teisiniu pagrindu, todėl Jūs turite teisę nesutikti pateikti savo duomenis, tačiau tokiu atveju, mes galime nesuteikti Jums būtinų maitinimo paslaugų arba neturėti galimybės laiku pranešti svarbią informaciją. Jūsų pateikti asmens duomenys bus saugomi 2 metus po renginio.</p>
-                                                    <p>Taip pat norime Jus informuoti, kad renginio metu bus filmuojama ir fotografuojama, siekiant užfiksuoti renginio akimirkas. Video ir foto medžiaga gali būti paskelbta mūsų administruojamose svetainėse ar kitose viešose vietose, įskaitant panaudojimą savo informaciniuose/reklaminiuose leidiniuose. Šiuos duomenis taip pat tvarkysime tik tuo atveju, jeigu Jūs sutiksite. Po renginio video ir foto medžiaga bus saugoma 5 metus, o po to bus sunaikinama, nebent teisės aktai nurodytų kitaip.</p>
-                                                    <p>Informuojame, kad Jūs, kaip duomenų subjektas turite šias teises: susipažinti su tvarkomais asmens duomenimis, reikalauti juos ištaisyti arba ištrinti, apriboti duomenų tvarkymą, teisę į duomenų perkeliamumą, taip pat Jūs turite teisę bet kada atšaukti šį savo duotą sutikimą. Tais atvejais, jeigu įtariate, kad buvo pažeistos Jūsų teisės į privatų gyvenimą, galite kreiptis į Valstybinę asmens duomenų apsaugos inspekciją. Norėdami gauti daugiau informacijos apie savo duomenų tvarkymą, rašykite mums el. paštu Jonines@SGmore.lt.</p>
+                                                    <p>Informuojame, kad UAB Saint–Gobain statybos gaminiai tvarkys Jūsų aukščiau pateiktus asmens duomenis Joninių festivalio organizavimo ir būtinos komunikacijos su Jumis tikslu. Jūsų duomenų tvarkymo teisinis pagrindas - mūsų ar trečiosios šalies teisėtas interesas (renginio kokybės ir saugumo užtikrinimas). Jūs galite nepateikti tam tikrų savo asmens duomenų, tačiau tokiu atveju, mes negalėsime Jums suteikti būtinų maitinimo paslaugų, pramogų ar apgyvendinimo paslaugų bei neturėsime galimybės laiku pranešti svarbią informaciją, susijusią su renginio pasikeitimais, jeigu tokių būtų. Jūsų pateikti asmens duomenys bus saugomi 1 metus po renginio. Duomenys bus perduodami UAB „Kempingas Slėnyje“ ir UAB „Renginių kūrimo grupė“, kurios teikia mums šio renginio organizavimo paslaugas.</p>
+                                                    <p>Taip pat norime Jus informuoti, kad renginio metu bus filmuojama ir fotografuojama, siekiant užfiksuoti renginio akimirkas. Video ir foto medžiaga gali būti paskelbta mūsų administruojamose svetainėse ar kitose viešose vietose, įskaitant panaudojimą savo informaciniuose/reklaminiuose leidiniuose. Šiuos duomenis tvarkysime tik tuo atveju, jeigu Jūs sutiksite (žr. žemiau). Po renginio video ir foto medžiaga bus saugoma 5 metus, o po to bus sunaikinama, nebent teisės aktai nurodytų kitaip.</p>
+                                                    <p>Informuojame, kad Jūs, kaip duomenų subjektas turite šias teises: susipažinti su tvarkomais asmens duomenimis, reikalauti juos ištaisyti arba ištrinti, apriboti duomenų tvarkymą, teisę į duomenų perkeliamumą, taip pat Jūs turite teisę bet kada atšaukti savo duotą sutikimą. Primename, kad Jūs turite teisę nepatirdami jokių neigiamų pasekmių, nesutikti, o sutikę, bet kada galėsite šį savo sutikimą atšaukti. Tais atvejais, kai įtariate, kad buvo pažeistos Jūsų teisės į privatų gyvenimą, galite kreiptis į Valstybinę asmens duomenų apsaugos inspekciją. Norėdami gauti daugiau informacijos apie savo duomenų tvarkymą, rašykite mums el. paštu Jonines@SGmore.lt.</p>
                                                 </div>
                                             </div>
                                             <div className="form-group">
                                                 <div className={personDataAgreementGroupClass}>
-                                                    <label htmlFor="personDataAgreement">Ar sutinkate, kad <b>UAB Saint-Gobain statybos gaminiai</b> tvarkytų jūsų asmens duomenis, nurodytus anketoje, Joninių festivalio organizavimo ir būtinos komunikacijos tikslu?</label>
+                                                    <label htmlFor="personDataAgreement">Ar sutinkate, kad <b>UAB Saint-Gobain</b> statybos gaminiai tvarkytų jūsų video ir foto duomenis, kaip tai nurodyta aukščiau?</label>
                                                     <ReactRadioButtonGroup
                                                         options={this.agreeDisagreeOptions}
                                                         name="personDataAgreement"
@@ -528,19 +499,6 @@ class Add extends React.Component {
                                                         inputClassName="ledas"
                                                     />
                                                     <span className="help-block">{this.state.inputData.personDataAgreement.message}</span>
-                                                </div>
-                                            </div>
-                                            <div className="form-group">
-                                                <div className={personMediaAgreementGroupClass}>
-                                                    <label htmlFor="personMediaAgreement">Ar sutinkate, kad <b>UAB Saint-Gobain statybos gaminiai</b> tvarkytų jūsų video ir foto duomenis, siekdami panaudoti juos savo informaciniuose/reklaminiuose leidiniuose?</label>
-                                                    <ReactRadioButtonGroup
-                                                        options={this.agreeDisagreeOptions}
-                                                        name="personMediaAgreement"
-                                                        isStateful={true}
-                                                        onChange={checkedValue => this.handleRadioChangeWithValidationRule(checkedValue)}
-                                                        inputClassName="ledas"
-                                                    />
-                                                    <span className="help-block">{this.state.inputData.personMediaAgreement.message}</span>
                                                 </div>
                                             </div>
                                             <div className="form-group">
@@ -554,16 +512,24 @@ class Add extends React.Component {
                                                     <span className="help-block">Asmuo su tokiu vardu, pavarde ir telefono numeriu jau yra užregistruotas</span>
                                                 }
                                             </div>
-                                            <button className="btn btn-lg btn-primary btn-block blackText" type="submit">Išsaugoti</button>
+                                            <button className="btn btn-lg btn-primary btn-block blackText" type="submit">Registruotis</button>
                                             <br />
                                         </div>
                                     </div>
                                 </form>
                             </div>
-                            
+
                         </div>
                     }
                 </section>
+                {!this.state.showSuccessScreen &&
+                    <div id="content">
+                        <span id="A"> <img src="../css/1.png" className="logo" /></span>
+                        <span id="B"> <img src="../css/2.png" className="logo" /></span>
+                        <span id="C"><img src="../css/3.png" className="logo" /></span>
+                        <span id="D"> <img src="../css/4.png" className="logo" /></span>
+                    </div>
+                }
             </div >
 
         )

@@ -12,8 +12,7 @@ var expenseSchema = new Schema({
     arriveTime: String,
     activities: String,
     feeding: String,
-    personDataAgreement: String,
-    personMediaAgreement: String
+    personDataAgreement: String
 });
 
 module.exports = mongoose.model('Expense', expenseSchema);

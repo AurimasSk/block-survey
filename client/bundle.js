@@ -40002,8 +40002,7 @@ var App = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(_Add2.default, null),
-        _react2.default.createElement('img', { className: 'logo', src: '../css/logo.jpg' })
+        _react2.default.createElement(_Add2.default, null)
       );
     }
   }]);
@@ -40984,8 +40983,7 @@ var Add = function (_React$Component) {
                     isValid: true, message: ''
                 },
                 feeding: { value: '', isValid: true, message: '' },
-                personDataAgreement: { value: '', isValid: true, message: '' },
-                personMediaAgreement: { value: '', isValid: true, message: '' }
+                personDataAgreement: { value: '', isValid: true, message: '' }
             }
         };
         _this.onSave = _this.onSave.bind(_this);
@@ -41101,24 +41099,6 @@ var Add = function (_React$Component) {
                 this.setState(state);
                 inputValid = false;
             }
-            if (state.inputData.personMediaAgreement.value.length == 0) {
-                state.inputData.personMediaAgreement.isValid = false;
-                state.inputData.personMediaAgreement.message = 'Prašome pasirinkti ar sutinkate';
-                this.setState(state);
-                inputValid = false;
-            }
-            if (state.inputData.personDataAgreement.value == "Nesutinku") {
-                state.inputData.personDataAgreement.isValid = false;
-                state.inputData.personDataAgreement.message = 'Deja, jums nesuteikus prieigos prie jūsų duomenų, negalėsime pasidalinti renginio dalyviams privaloma žinoti informacija.';
-                this.setState(state);
-                inputValid = false;
-            }
-            if (state.inputData.personMediaAgreement.value == "Nesutinku") {
-                state.inputData.personMediaAgreement.isValid = false;
-                state.inputData.personMediaAgreement.message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje.';
-                this.setState(state);
-                inputValid = false;
-            }
 
             return inputValid;
         }
@@ -41158,8 +41138,7 @@ var Add = function (_React$Component) {
         //             arriveTime: e.state.inputData.arriveTime.value,
         //             activities: this.concatActivitiesValues(e.state.inputData.activities.value),
         //             feeding: e.state.inputData.feeding.value,
-        //             personDataAgreement: e.state.inputData.personDataAgreement.value,
-        //             personMediaAgreement: e.state.inputData.personMediaAgreement.value,
+        //             personDataAgreement: e.state.inputData.personDataAgreement.value
         //             safetyAccepted: e.state.inputData.safetyAccepted.value
         //         }), {
         //             headers: {
@@ -41207,8 +41186,7 @@ var Add = function (_React$Component) {
                         arriveTime: e.state.inputData.arriveTime.value,
                         activities: e.concatActivitiesValues(e.state.inputData.activities.value),
                         feeding: e.state.inputData.feeding.value,
-                        personDataAgreement: e.state.inputData.personDataAgreement.value,
-                        personMediaAgreement: e.state.inputData.personMediaAgreement.value
+                        personDataAgreement: e.state.inputData.personDataAgreement.value
                     }), {
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
@@ -41271,20 +41249,14 @@ var Add = function (_React$Component) {
             var inputData = this.state.inputData;
             inputData[fieldName].value = value;
 
-            if (fieldName == "personDataAgreement" && value == "Nesutinku") {
-                inputData[fieldName].isValid = false;
-                inputData[fieldName].message = 'Deja, jums nesuteikus prieigos prie jūsų duomenų, negalėsime pasidalinti renginio dalyviams privaloma žinoti informacija.';
-            } else if (fieldName == "personDataAgreement" && value == "Sutinku") {
-                inputData[fieldName].isValid = true;
-                inputData[fieldName].message = '';
-            }
-            if (fieldName == "personMediaAgreement" && value == "Nesutinku") {
-                inputData[fieldName].isValid = false;
-                inputData[fieldName].message = 'Norime informuoti, kad festivalio metu renginio veiklos bus filmuojamos bei fotografuojamos, tad negalime garantuoti, jog pavyks išvengti Jūsų užfiksavimo bendroje, renginio atmosferą atspindinčioje, nuotraukoje.';
-            } else if (fieldName == "personMediaAgreement" && value == "Sutinku") {
-                inputData[fieldName].isValid = true;
-                inputData[fieldName].message = '';
-            }
+            // if (fieldName == "personDataAgreement" && value == "Nesutinku") {
+            //     inputData[fieldName].isValid = false;
+            //     inputData[fieldName].message = 'Deja, jums nesuteikus prieigos prie jūsų duomenų, negalėsime pasidalinti renginio dalyviams privaloma žinoti informacija.';
+            // }
+            // else if (fieldName == "personDataAgreement" && value == "Sutinku") {
+            //     inputData[fieldName].isValid = true;
+            //     inputData[fieldName].message = '';
+            // }
 
             return this.setState({ inputData: inputData });
         }
@@ -41319,7 +41291,6 @@ var Add = function (_React$Component) {
             var activitiesGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.activities.isValid });
             var feedingGroupClass = (0, _classnames2.default)('form-group', 'minWidth', { 'has-error': !this.state.inputData.feeding.isValid });
             var personDataAgreementGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.personDataAgreement.isValid });
-            var personMediaAgreementGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.inputData.personMediaAgreement.isValid });
             var exactPersonExistsGroupClass = (0, _classnames2.default)('form-group', { 'has-error': !this.state.exactPersonExists });
 
             if (this.state.counterValue > 90 && this.allSleepingOptions.length == 3) {
@@ -41350,6 +41321,15 @@ var Add = function (_React$Component) {
                             _react2.default.createElement(
                                 'h4',
                                 { className: 'section-header' },
+                                _react2.default.createElement(
+                                    'p',
+                                    { className: 'mainHeader' },
+                                    _react2.default.createElement(
+                                        'b',
+                                        null,
+                                        'SAINT-GOBAIN MORE JONINI\u0172 FESTIVALIS BIR\u017DELIO 23-24 D.'
+                                    )
+                                ),
                                 _react2.default.createElement(
                                     'p',
                                     { className: 'mainHeader' },
@@ -41562,7 +41542,7 @@ var Add = function (_React$Component) {
                                                 _react2.default.createElement(
                                                     'label',
                                                     null,
-                                                    ' Informuojame, kad nuo 11:00 val. sve\u010Diai tur\u0117s galimyb\u0119 u\u017Esiimti kitomis veiklomis \u2013 '
+                                                    'Informuojame, kad nuo 11:00 val. sve\u010Diai tur\u0117s galimyb\u0119 u\u017Esiimti kitomis veiklomis \u2013 '
                                                 ),
                                                 _react2.default.createElement(
                                                     'label',
@@ -41644,17 +41624,17 @@ var Add = function (_React$Component) {
                                                 _react2.default.createElement(
                                                     'p',
                                                     null,
-                                                    'Informuojame, kad UAB Saint\u2013Gobain statybos gaminiai tvarkys J\u016Bs\u0173 auk\u0161\u010Diau pateiktus asmens duomenis Jonini\u0173 festivalio organizavimo ir b\u016Btinos komunikacijos su Jumis tikslu. \u0160iuos duomenis ketiname tvarkyti J\u016Bs\u0173 sutikimo teisiniu pagrindu, tod\u0117l J\u016Bs turite teis\u0119 nesutikti pateikti savo duomenis, ta\u010Diau tokiu atveju, mes galime nesuteikti Jums b\u016Btin\u0173 maitinimo paslaug\u0173 arba netur\u0117ti galimyb\u0117s laiku prane\u0161ti svarbi\u0105 informacij\u0105. J\u016Bs\u0173 pateikti asmens duomenys bus saugomi 2 metus po renginio.'
+                                                    'Informuojame, kad UAB Saint\u2013Gobain statybos gaminiai tvarkys J\u016Bs\u0173 auk\u0161\u010Diau pateiktus asmens duomenis Jonini\u0173 festivalio organizavimo ir b\u016Btinos komunikacijos su Jumis tikslu. J\u016Bs\u0173 duomen\u0173 tvarkymo teisinis pagrindas - m\u016Bs\u0173 ar tre\u010Diosios \u0161alies teis\u0117tas interesas (renginio kokyb\u0117s ir saugumo u\u017Etikrinimas). J\u016Bs galite nepateikti tam tikr\u0173 savo asmens duomen\u0173, ta\u010Diau tokiu atveju, mes negal\u0117sime Jums suteikti b\u016Btin\u0173 maitinimo paslaug\u0173, pramog\u0173 ar apgyvendinimo paslaug\u0173 bei netur\u0117sime galimyb\u0117s laiku prane\u0161ti svarbi\u0105 informacij\u0105, susijusi\u0105 su renginio pasikeitimais, jeigu toki\u0173 b\u016Bt\u0173. J\u016Bs\u0173 pateikti asmens duomenys bus saugomi 1 metus po renginio. Duomenys bus perduodami UAB \u201EKempingas Sl\u0117nyje\u201C ir UAB \u201ERengini\u0173 k\u016Brimo grup\u0117\u201C, kurios teikia mums \u0161io renginio organizavimo paslaugas.'
                                                 ),
                                                 _react2.default.createElement(
                                                     'p',
                                                     null,
-                                                    'Taip pat norime Jus informuoti, kad renginio metu bus filmuojama ir fotografuojama, siekiant u\u017Efiksuoti renginio akimirkas. Video ir foto med\u017Eiaga gali b\u016Bti paskelbta m\u016Bs\u0173 administruojamose svetain\u0117se ar kitose vie\u0161ose vietose, \u012Fskaitant panaudojim\u0105 savo informaciniuose/reklaminiuose leidiniuose. \u0160iuos duomenis taip pat tvarkysime tik tuo atveju, jeigu J\u016Bs sutiksite. Po renginio video ir foto med\u017Eiaga bus saugoma 5 metus, o po to bus sunaikinama, nebent teis\u0117s aktai nurodyt\u0173 kitaip.'
+                                                    'Taip pat norime Jus informuoti, kad renginio metu bus filmuojama ir fotografuojama, siekiant u\u017Efiksuoti renginio akimirkas. Video ir foto med\u017Eiaga gali b\u016Bti paskelbta m\u016Bs\u0173 administruojamose svetain\u0117se ar kitose vie\u0161ose vietose, \u012Fskaitant panaudojim\u0105 savo informaciniuose/reklaminiuose leidiniuose. \u0160iuos duomenis tvarkysime tik tuo atveju, jeigu J\u016Bs sutiksite (\u017Er. \u017Eemiau). Po renginio video ir foto med\u017Eiaga bus saugoma 5 metus, o po to bus sunaikinama, nebent teis\u0117s aktai nurodyt\u0173 kitaip.'
                                                 ),
                                                 _react2.default.createElement(
                                                     'p',
                                                     null,
-                                                    'Informuojame, kad J\u016Bs, kaip duomen\u0173 subjektas turite \u0161ias teises: susipa\u017Einti su tvarkomais asmens duomenimis, reikalauti juos i\u0161taisyti arba i\u0161trinti, apriboti duomen\u0173 tvarkym\u0105, teis\u0119 \u012F duomen\u0173 perkeliamum\u0105, taip pat J\u016Bs turite teis\u0119 bet kada at\u0161aukti \u0161\u012F savo duot\u0105 sutikim\u0105. Tais atvejais, jeigu \u012Ftariate, kad buvo pa\u017Eeistos J\u016Bs\u0173 teis\u0117s \u012F privat\u0173 gyvenim\u0105, galite kreiptis \u012F Valstybin\u0119 asmens duomen\u0173 apsaugos inspekcij\u0105. Nor\u0117dami gauti daugiau informacijos apie savo duomen\u0173 tvarkym\u0105, ra\u0161ykite mums el. pa\u0161tu Jonines@SGmore.lt.'
+                                                    'Informuojame, kad J\u016Bs, kaip duomen\u0173 subjektas turite \u0161ias teises: susipa\u017Einti su tvarkomais asmens duomenimis, reikalauti juos i\u0161taisyti arba i\u0161trinti, apriboti duomen\u0173 tvarkym\u0105, teis\u0119 \u012F duomen\u0173 perkeliamum\u0105, taip pat J\u016Bs turite teis\u0119 bet kada at\u0161aukti savo duot\u0105 sutikim\u0105. Primename, kad J\u016Bs turite teis\u0119 nepatirdami joki\u0173 neigiam\u0173 pasekmi\u0173, nesutikti, o sutik\u0119, bet kada gal\u0117site \u0161\u012F savo sutikim\u0105 at\u0161aukti. Tais atvejais, kai \u012Ftariate, kad buvo pa\u017Eeistos J\u016Bs\u0173 teis\u0117s \u012F privat\u0173 gyvenim\u0105, galite kreiptis \u012F Valstybin\u0119 asmens duomen\u0173 apsaugos inspekcij\u0105. Nor\u0117dami gauti daugiau informacijos apie savo duomen\u0173 tvarkym\u0105, ra\u0161ykite mums el. pa\u0161tu Jonines@SGmore.lt.'
                                                 )
                                             )
                                         ),
@@ -41671,9 +41651,9 @@ var Add = function (_React$Component) {
                                                     _react2.default.createElement(
                                                         'b',
                                                         null,
-                                                        'UAB Saint-Gobain statybos gaminiai'
+                                                        'UAB Saint-Gobain'
                                                     ),
-                                                    ' tvarkyt\u0173 j\u016Bs\u0173 asmens duomenis, nurodytus anketoje, Jonini\u0173 festivalio organizavimo ir b\u016Btinos komunikacijos tikslu?'
+                                                    ' statybos gaminiai tvarkyt\u0173 j\u016Bs\u0173 video ir foto duomenis, kaip tai nurodyta auk\u0161\u010Diau?'
                                                 ),
                                                 _react2.default.createElement(_reactRadioButtonGroup2.default, {
                                                     options: this.agreeDisagreeOptions,
@@ -41688,39 +41668,6 @@ var Add = function (_React$Component) {
                                                     'span',
                                                     { className: 'help-block' },
                                                     this.state.inputData.personDataAgreement.message
-                                                )
-                                            )
-                                        ),
-                                        _react2.default.createElement(
-                                            'div',
-                                            { className: 'form-group' },
-                                            _react2.default.createElement(
-                                                'div',
-                                                { className: personMediaAgreementGroupClass },
-                                                _react2.default.createElement(
-                                                    'label',
-                                                    { htmlFor: 'personMediaAgreement' },
-                                                    'Ar sutinkate, kad ',
-                                                    _react2.default.createElement(
-                                                        'b',
-                                                        null,
-                                                        'UAB Saint-Gobain statybos gaminiai'
-                                                    ),
-                                                    ' tvarkyt\u0173 j\u016Bs\u0173 video ir foto duomenis, siekdami panaudoti juos savo informaciniuose/reklaminiuose leidiniuose?'
-                                                ),
-                                                _react2.default.createElement(_reactRadioButtonGroup2.default, {
-                                                    options: this.agreeDisagreeOptions,
-                                                    name: 'personMediaAgreement',
-                                                    isStateful: true,
-                                                    onChange: function onChange(checkedValue) {
-                                                        return _this2.handleRadioChangeWithValidationRule(checkedValue);
-                                                    },
-                                                    inputClassName: 'ledas'
-                                                }),
-                                                _react2.default.createElement(
-                                                    'span',
-                                                    { className: 'help-block' },
-                                                    this.state.inputData.personMediaAgreement.message
                                                 )
                                             )
                                         ),
@@ -41752,13 +41699,40 @@ var Add = function (_React$Component) {
                                         _react2.default.createElement(
                                             'button',
                                             { className: 'btn btn-lg btn-primary btn-block blackText', type: 'submit' },
-                                            'I\u0161saugoti'
+                                            'Registruotis'
                                         ),
                                         _react2.default.createElement('br', null)
                                     )
                                 )
                             )
                         )
+                    )
+                ),
+                !this.state.showSuccessScreen && _react2.default.createElement(
+                    'div',
+                    { id: 'content' },
+                    _react2.default.createElement(
+                        'span',
+                        { id: 'A' },
+                        ' ',
+                        _react2.default.createElement('img', { src: '../css/1.png', className: 'logo' })
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        { id: 'B' },
+                        ' ',
+                        _react2.default.createElement('img', { src: '../css/2.png', className: 'logo' })
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        { id: 'C' },
+                        _react2.default.createElement('img', { src: '../css/3.png', className: 'logo' })
+                    ),
+                    _react2.default.createElement(
+                        'span',
+                        { id: 'D' },
+                        ' ',
+                        _react2.default.createElement('img', { src: '../css/4.png', className: 'logo' })
                     )
                 )
             );

@@ -16,7 +16,6 @@ export default class App extends React.Component {
     return (
       <div>
         <Add />
-        <img className="logo" src="../css/logo.jpg" />
       </div>
     );
   }

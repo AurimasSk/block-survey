@@ -23,7 +23,6 @@ router.route('/insert')
         answers.activities = req.body.activities;
         answers.feeding = req.body.feeding;
         answers.personDataAgreement = req.body.personDataAgreement;
-        answers.personMediaAgreement = req.body.personMediaAgreement;
 
         answers.save(function (err) {
             if (err)
