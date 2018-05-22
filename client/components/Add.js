@@ -560,7 +560,7 @@ class Add extends React.Component {
                                     </div>
                                 </form>
                             </div>
-                            <img className="logo" src="../css/logo.png" />
+                            
                         </div>
                     }
                 </section>

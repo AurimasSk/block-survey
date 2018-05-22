@@ -40002,7 +40002,8 @@ var App = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(_Add2.default, null)
+        _react2.default.createElement(_Add2.default, null),
+        _react2.default.createElement('img', { className: 'logo', src: '../css/logo.jpg' })
       );
     }
   }]);
@@ -41757,8 +41758,7 @@ var Add = function (_React$Component) {
                                     )
                                 )
                             )
-                        ),
-                        _react2.default.createElement('img', { className: 'logo', src: '../css/logo.png' })
+                        )
                     )
                 )
             );
